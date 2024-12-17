@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<h1 class="mb-4 text-center">Ajouter un Commentaire</h1>
+
+				{# Affichage des messages d'erreur ou de succès #}
+				{% for message in app.flashes('error') %}
+					<div class="alert alert-danger">{{ message }}</div>
+				{% endfor %}
+				{% for message in app.flashes('success') %}
+					<div class="alert alert-success">{{ message }}</div>
+				{% endfor %}
+
+				<form method="post" class="card shadow-sm p-4">
+					<div class="mb-3">
+						<label for="description" class="form-label fw-bold">Description</label>
+						<input type="text" id="description" name="description" class="form-control" placeholder="Entrez votre commentaire" required>
+					</div>
+					<div class="mb-3">
+						<label for="recette_id" class="form-label fw-bold">ID de la Recette</label>
+						<input type="number" id="recette_id" name="recette_id" class="form-control" placeholder="Entrez l'ID de la recette" required>
+					</div>
+					<div class="text-center">
+						<button type="submit" class="btn btn-primary px-4">Créer</button>
+						<a href="{{ path('list') }}" class="btn btn-secondary px-4">Annuler</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+

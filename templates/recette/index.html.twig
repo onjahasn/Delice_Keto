@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello RecettesController!
+{% endblock %}
+
+{% block body %}
+	<section class="mt-5">
+		<div class="container recette">
+			<div class="row pb-3">
+				{% for recette in recettes %}
+					<div class="col-md-6 col-lg-3 mb-4">
+						<div
+							class="card h-100 p-3 carte">
+							{# <img class="card-img-top photo-card" src="{{ asset('upload/' ~ recette.image) }}" alt="service"> #}
+							{% if recette.image %}
+								<img src="{{ asset('uploads/' ~ recette.image) }}" alt="Image de la recette" class="card-img-top photo-card">
+							{% else %}
+								<img src="{{ asset('images/image2.jpg') }}" alt="Image par défaut" class="card-img-top photo-card">
+							{% endif %}
+
+							<h5 class="card-title my-2">{{ recette.titre }}</h5>
+							<div class="temps-personne mt-2 mb-0">
+								<div class="d-flex mr-3">
+									<i class="fa-solid fa-utensils"></i>
+									<p class="p-1">{{ recette.nombrePersonne }}
+										{{ recette.nombrePersonne > 1 ? 'personnes' : 'personne' }}</p>
+
+								</div>
+								<div class="d-flex mr-3">
+									<i class="fa-regular fa-clock"></i>
+									<p class="p-1">{{ recette.tempsPreparation }}
+										min</p>
+
+								</div>
+							</div>
+							<div class="text-center">
+								<a href="{{ path('recette_show', { 'id': recette.id }) }}" class="btn text-dark">Voir détail</a>
+							</div>
+							<div class="interaction">
+								<div class="d-flex">
+									<i class="fa-solid fa-comments"></i>
+									<p>15</p>
+								</div>
+								<div class="d-flex">
+									<i class="fa-solid fa-eye"></i>
+									<p>45</p>
+								</div>
+								<div class="d-flex">
+									<i class="fa-solid fa-heart"></i>
+									<p>110</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+
+{% endblock %}
+
+
+{# {% extends 'base.html.twig' %}
+
+{% block title %}Hello ArticleController!
+{% endblock %}
+
+{% block body %}
+	<section class="mt-5">
+		<div class="container recette">
+			<h2 class="text-center my-4">Liste des articles</h2>
+
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Titre</th>
+						<th>Contenu</th>
+						<th>Categorie</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for article in articles %}
+						<tr>
+							<td>{{ article.id }}</td>
+							<td>{{ article.titre }}</td>						
+							<td>{{ article.contenu|length > 50 ? article.contenu|slice(0, 50) ~ '...' : article.contenu }}</td>
+							<td>{{ article.category.nom }}</td>
+							<td>
+								<a href="{{ path('article_detail', { 'id': article.id }) }}" class="btn btn-primary btn-sm">Voir détail</a>
+								{% if is_granted('ROLE_ADMIN') %}
+									<a href="{{ path('article_edit', {'id': article.id}) }}" class="btn btn-success btn-sm">Modifier</a>
+									<form action="{{ path('article_delete', {id: article.id}) }}" method="post" style="display: inline;">
+										<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">
+										<button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+									</form>
+								{% endif %}
+
+							</td>
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan="4" class="text-center">Aucun article disponible.</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</section>
+{% endblock %} #}

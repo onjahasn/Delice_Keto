@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Éditer le Commentaire
+{% endblock %}
+
+{% block body %}
+	<div class="container mt-5">
+		<h3 class="mb-4">Éditer un Commentaire</h3>
+
+		<form method="post">
+			<div class="mb-3">
+				<label for="description" class="form-label fw-bold">Description :</label>
+				<input type="text" id="description" name="description" value="{{ commentaire.description }}" class="form-control" required>
+			</div>
+
+			<div class="d-flex justify-content-start">
+				<button type="submit" class="btn btn-success me-2">Mettre à jour</button>
+				<a href="{{ path('list') }}" class="btn btn-secondary">Retour à la liste</a>
+			</div>
+		</form>
+	</div>
+{% endblock %}
+

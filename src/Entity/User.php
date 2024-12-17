@@ -4,9 +4,12 @@
 // Cette classe représente une entité utilisateur qui est mappée à la base de données
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM; // On importe les annotations de Doctrine pour gérer la persistance des données en base de données
 use Symfony\Component\Security\Core\User\UserInterface; // On importe l'interface UserInterface de Symfony pour la gestion des utilisateurs
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface; // On importe PasswordAuthenticatedUserInterface pour gérer l'authentification avec mot de passe
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity] // Cette annotation indique à Doctrine que cette classe est une entité et qu'elle sera mappée à une table en base de données
 class User implements UserInterface, PasswordAuthenticatedUserInterface // La classe User implémente UserInterface et PasswordAuthenticatedUserInterface, ce qui signifie que cette classe doit gérer les informations d'authentification de l'utilisateur
@@ -17,6 +20,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface // La cl
     private ?int $id = null; // Propriété privée pour stocker l'ID de l'utilisateur. Elle est de type int et peut être nulle (lors de la création de l'utilisateur)
 
     #[ORM\Column(length: 180, unique: true)] // La colonne 'email' est unique et doit être d'une longueur maximale de 180 caractères
+    #[Groups(['users.read'])]
     private ?string $email = null; // Propriété privée pour stocker l'email de l'utilisateur
 
     #[ORM\Column] // Cette annotation définit la propriété suivante comme une colonne de la table
@@ -25,8 +29,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface // La cl
     #[ORM\Column] // Cette annotation définit la propriété suivante comme une colonne de la table
     private ?string $password = null; // Propriété privée pour stocker le mot de passe de l'utilisateur
 
+    #[Groups(['users.read'])]
     #[ORM\Column(length: 50)] // La propriété 'name' est une colonne avec une longueur maximale de 50 caractères
-    private ?string $name = null; // Propriété privée pour stocker le nom de l'utilisateur
+    private ?string $name = null;
+
+    /**
+     * @var Collection<int, Commentaire>
+     */
+    #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'user')]
+    private Collection $commentaires;
+
+    public function __construct()
+    {
+        $this->commentaires = new ArrayCollection();
+    } // Propriété privée pour stocker le nom de l'utilisateur
 
     // Méthode pour obtenir l'ID de l'utilisateur. Elle renvoie l'ID de l'entité
     public function getId(): ?int { return $this->id; }
@@ -83,5 +99,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface // La cl
     public function getUserIdentifier(): string 
     {
         return $this->email; // Retourne l'email de l'utilisateur comme identifiant unique
+    }
+
+    /**
+     * @return Collection<int, Commentaire>
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): static
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires->add($commentaire);
+            $commentaire->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): static
+    {
+        if ($this->commentaires->removeElement($commentaire)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getUser() === $this) {
+                $commentaire->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

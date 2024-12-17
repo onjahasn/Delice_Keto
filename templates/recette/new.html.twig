@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Recette
+{% endblock %}
+
+{% block body %}
+	<div class="formulaire-ajout-recette carte mb-4">
+		<h2 class="text-center mt-2">Ajouter une recette</h2>
+
+		<div class="my-4">
+			{{ form_start(form) }}
+
+			{{ form_row(form.titre) }}
+			{{ form_row(form.image) }}
+			{{ form_row(form.tempsPreparation) }}
+			{{ form_row(form.nombrePersonne) }}
+			{{ form_row(form.categorie) }}
+			<div id="ingredient-container" data-prototype="{{ form_widget(form.ingredients.vars.prototype)|e('html_attr') }}">
+				{% for ingredientForm in form.ingredients %}
+					<div class="ingredient-item">
+						{{ form_row(ingredientForm) }}
+						<button type="button" class="btn btn-danger btn-sm remove-ingredient">Supprimer</button>
+					</div>
+				{% endfor %}
+			</div>
+			<button type="button" id="add-ingredient" class="btn mt-2">Ajouter un ingrédient</button>
+
+			<div id="etape-container" data-prototype="{{ form_widget(form.etapes.vars.prototype)|e('html_attr') }}">
+				{% for etapeForm in form.etapes %}
+					<div class="etape-item">
+						{{ form_row(etapeForm) }}
+						<button type="button" class="btn btn-danger btn-sm remove-etape float-right">
+							<i class="fa-solid fa-trash"></i>
+						</button>
+					</div>
+				{% endfor %}
+			</div>
+			<button type="button" id="add-etape" class="btn my-2">Ajouter une étape</button> <br/>
+			{# {{ form_row(form.createdAt) }} #}
+			<button class="btn btn-success mt-2" type="submit">Sauvegarder</button>
+			{{ form_end(form) }}
+		</div>
+	</div>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', () => { /**
+     * Fonction pour ajouter un nouvel élément (étape ou ingrédient)
+     * @param {string} containerId - ID du conteneur
+     * @param {string} addButtonId - ID du bouton d'ajout
+     */
+function handleDynamicFields(containerId, addButtonId) {
+const container = document.getElementById(containerId);
+const addButton = document.getElementById(addButtonId);
+
+addButton.addEventListener('click', () => {
+const prototype = container.dataset.prototype;
+const index = container.children.length;
+const newForm = prototype.replace(/__name__/g, index);
+
+const div = document.createElement('div');
+div.classList.add('dynamic-item'); // Classe générique pour styling
+div.innerHTML = newForm + `
+<button type="button" class="btn btn-danger btn-sm remove-item float-right">
+	<i class="fa-solid fa-trash"></i>
+</button>
+
+            `;
+
+container.appendChild(div);
+
+// Ajouter un event listener pour le bouton de suppression
+div.querySelector('.remove-item').addEventListener('click', () => {
+div.remove();
+});
+});
+
+// Event listeners pour les boutons "Supprimer" existants
+container.querySelectorAll('.remove-item').forEach((button) => {
+button.addEventListener('click', (event) => {
+event.target.closest('.dynamic-item').remove();
+});
+});
+}
+
+// Appel pour les ingrédients
+handleDynamicFields('ingredient-container', 'add-ingredient');
+
+// Appel pour les étapes
+handleDynamicFields('etape-container', 'add-etape');
+});
+	</script>
+{% endblock %}

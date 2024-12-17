@@ -7,10 +7,12 @@ use App\Entity\User; // On importe la classe User. Cela permet de manipuler les 
 use App\Repository\UserRepository; // On importe le repository User pour accéder aux données de la table 'user' dans la base de données
 use Doctrine\ORM\EntityManagerInterface; // On importe EntityManagerInterface qui est utilisé pour interagir avec la base de données
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; // Importation de la classe de base de Symfony qui fournit des méthodes utiles pour les contrôleurs
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request; // Importation de la classe Request qui gère les données envoyées dans la requête HTTP
 use Symfony\Component\HttpFoundation\Response; // Importation de la classe Response qui est utilisée pour envoyer une réponse HTTP
 use Symfony\Component\Routing\Annotation\Route; // On importe l'annotation Route, qui permet de définir des routes pour ce contrôleur
- 
+use Symfony\Component\Serializer\SerializerInterface;
+
 #[Route('/users')] // Cette annotation définit la route principale pour toutes les actions du contrôleur. Toutes les routes dans ce contrôleur commenceront par '/users'
 class UserController extends AbstractController // Déclaration de la classe UserController qui étend la classe AbstractController (la classe de base des contrôleurs Symfony)
 {
@@ -70,9 +72,18 @@ class UserController extends AbstractController // Déclaration de la classe Use
     #[Route('/{id}/delete', name: 'user_delete', methods: ['POST'])] // La route '/{id}/delete' permet de supprimer un utilisateur
     public function delete(User $user, EntityManagerInterface $em): Response // La méthode delete() permet de supprimer un utilisateur existant
     {
-        $em->remove($user); // Supprime l'utilisateur de la base de données
+        $em->remove($user);
         $em->flush(); // Sauvegarde la suppression dans la base de données
 
         return $this->redirectToRoute('user_index'); // Redirige vers la liste des utilisateurs après suppression
+    }
+
+    #[Route("/api", name: "api_user_index", methods: ["GET"])]
+    public function indexApi(UserRepository $repository): JsonResponse 
+    {
+        $users = $repository->findAll();
+
+        return $this->json($users, 200, [], ['groups' => 'users:read']);
+
     }
 }

@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Commentaires
+{% endblock %}
+
+{% block body %}
+	<h3 class="mb-4">Liste des Commentaires</h3>
+
+	<a href="{{ path('create') }}" class="btn btn-primary mb-3">Ajouter un commentaire</a>
+
+	<table class="table table-striped table-hover">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>ID</th>
+				<th>Description</th>
+				<th>Date de création</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for commentaire in commentaires %}
+				<tr>
+					<td>{{ loop.index }}</td>
+					{# Numérotation automatique des lignes #}
+					<td>{{ commentaire.id }}</td>
+					<td>{{ commentaire.description }}</td>
+					<td>{{ commentaire.createdAt|date('Y-m-d H:i') }}</td>
+					<td
+						class="d-flex">
+						{# Bouton Voir #}
+						<a href="{{ path('show', { id: commentaire.id }) }}" class="btn btn-sm btn-info mx-1">
+							Voir
+						</a>
+						{# Bouton Modifier #}
+						<a href="{{ path('edit', { id: commentaire.id }) }}" class="btn btn-sm btn-primary mx-1">
+							Éditer
+						</a>
+						{# Bouton Supprimer sécurisé avec CSRF #}
+						<form method="post" action="{{ path('delete', { id: commentaire.id }) }}" class="mx-1" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">
+							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commentaire.id) }}">
+							<button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+						</form>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="5" class="text-center">Aucun commentaire trouvé.</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<a href="{{ path('recette_index') }}" class="btn btn-secondary">Retour aux recettes</a>
+{% endblock %}
+
