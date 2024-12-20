@@ -55,7 +55,9 @@ body {
     object-fit: cover;
     /* Pour couvrir entièrement la zone disponible */
     width: 100%;
-    height: 500px;
+    height: 400px;
+    max-height: 60vh;
+    /* Limite la hauteur à 60% de la hauteur de la fenêtre */
 }
 
 .stat-card {

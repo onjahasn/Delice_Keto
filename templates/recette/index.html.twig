@@ -4,11 +4,11 @@
 {% endblock %}
 
 {% block body %}
-	<section class="mt-5">
+	<section class="mt-3">
 		<div class="container recette">
 			<div class="row pb-3">
 				{% for recette in recettes %}
-					<div class="col-md-6 col-lg-3 mb-4">
+					<div class="col-md-6 col-lg-3 mb-3">
 						<div
 							class="card h-100 p-3 carte">
 							{# <img class="card-img-top photo-card" src="{{ asset('upload/' ~ recette.image) }}" alt="service"> #}
@@ -22,15 +22,12 @@
 							<div class="temps-personne mt-2 mb-0">
 								<div class="d-flex mr-3">
 									<i class="fa-solid fa-utensils"></i>
-									<p class="p-1">{{ recette.nombrePersonne }}
-										{{ recette.nombrePersonne > 1 ? 'personnes' : 'personne' }}</p>
-
+									<p class="p-1">{{ recette.nombrePersonne }} pers</p>
 								</div>
 								<div class="d-flex mr-3">
 									<i class="fa-regular fa-clock"></i>
 									<p class="p-1">{{ recette.tempsPreparation }}
 										min</p>
-
 								</div>
 							</div>
 							<div class="text-center">

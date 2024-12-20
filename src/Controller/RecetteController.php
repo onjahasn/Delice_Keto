@@ -26,7 +26,7 @@ class RecetteController extends AbstractController
         ]);
     }
 
-    #[Route('/recette/{id}', name: 'recette_show', methods: ['GET', 'POST'])]
+    #[Route('/recette/{id}', name: 'recette_show', requirements: ['id' => '\\d+'], methods: ['GET', 'POST'])]
     public function showRecetteWithComments(
         int $id,
         RecetteRepository $recetteRepository,
@@ -66,7 +66,7 @@ class RecetteController extends AbstractController
 
 
     #[Route('/recette/new', name: 'recette_new', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADMIN')]
+    // #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $em, #[Autowire('%uploadDir%')] string $uploadDir): Response
     {
         $recette = new Recette();
