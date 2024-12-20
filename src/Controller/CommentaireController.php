@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/commentaires')]
+#[Route('/api/commentaires')]
 class CommentaireController extends AbstractController
 {
     #[Route('', name: 'list', methods: ['GET'])]
@@ -128,7 +128,6 @@ class CommentaireController extends AbstractController
                 return $this->redirectToRoute('list');
             }
         }
-
         return $this->render('commentaire/edit.html.twig', [
             'commentaire' => $commentaire,
         ]);

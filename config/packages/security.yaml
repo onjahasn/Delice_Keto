@@ -37,6 +37,8 @@ security:
         stateless: true  # Indique que l'API ne maintient pas de session (stateless)
         json_login:  # Configuration pour une authentification JSON (souvent utilisée pour les APIs)
             check_path: /api/login  # La route où les données de connexion sont envoyées
+            username_path: email
+            password_path: password
             success_handler: lexik_jwt_authentication.handler.authentication_success  # Si la connexion réussit, la réponse JSON sera gérée ici
             failure_handler: lexik_jwt_authentication.handler.authentication_failure  # Si la connexion échoue, la réponse JSON sera gérée ici
      
@@ -52,6 +54,7 @@ security:
 
     # Autorise l'accès à la page de déconnexion sans être authentifié
     - { path: ^/logout, roles: PUBLIC_ACCESS } # La page /logout est publique (tout le monde peut y accéder)
+    - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
     # Autorise l'accès à la page d'inscription sans être authentifié
     - { path: ^/users/new, roles: PUBLIC_ACCESS } # La page /users/new (inscription) est publique (tout le monde peut y accéder)

@@ -77,13 +77,4 @@ class UserController extends AbstractController // Déclaration de la classe Use
 
         return $this->redirectToRoute('user_index'); // Redirige vers la liste des utilisateurs après suppression
     }
-
-    #[Route("/api", name: "api_user_index", methods: ["GET"])]
-    public function indexApi(UserRepository $repository): JsonResponse 
-    {
-        $users = $repository->findAll();
-
-        return $this->json($users, 200, [], ['groups' => 'users:read']);
-
-    }
 }
