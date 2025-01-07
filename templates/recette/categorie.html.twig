@@ -11,9 +11,9 @@
 					<div class="col-md-6 col-lg-3 mb-4">
 						<div class="card h-100 p-3 carte">
 							{% if recette.image %}
-								<img src="{{ asset('uploads/' ~ recette.image) }}" alt="Image de la recette" class="card-img-top photo-card">
+								<img src="{{ asset('uploads/' ~ recette.image) }}" alt="Recette" class="card-img-top photo-card">
 							{% else %}
-								<img src="{{ asset('images/image2.jpg') }}" alt="Image par défaut" class="card-img-top photo-card">
+								<img src="{{ asset('images/image2.jpg') }}" alt="Recettte par défaut" class="card-img-top photo-card">
 							{% endif %}
 
 							<h5 class="card-title my-2">{{ recette.titre }}</h5>

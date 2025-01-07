@@ -39,9 +39,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface // La cl
     #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'user')]
     private Collection $commentaires;
 
+    /**
+     * @var Collection<int, Recette>
+     */
+    #[ORM\OneToMany(targetEntity: Recette::class, mappedBy: 'user')]
+    private Collection $recettes;
+
     public function __construct()
     {
         $this->commentaires = new ArrayCollection();
+        $this->recettes = new ArrayCollection();
     } // Propriété privée pour stocker le nom de l'utilisateur
 
     // Méthode pour obtenir l'ID de l'utilisateur. Elle renvoie l'ID de l'entité
@@ -125,6 +132,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface // La cl
             // set the owning side to null (unless already changed)
             if ($commentaire->getUser() === $this) {
                 $commentaire->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recette>
+     */
+    public function getRecettes(): Collection
+    {
+        return $this->recettes;
+    }
+
+    public function addRecette(Recette $recette): static
+    {
+        if (!$this->recettes->contains($recette)) {
+            $this->recettes->add($recette);
+            $recette->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecette(Recette $recette): static
+    {
+        if ($this->recettes->removeElement($recette)) {
+            // set the owning side to null (unless already changed)
+            if ($recette->getUser() === $this) {
+                $recette->setUser(null);
             }
         }
 

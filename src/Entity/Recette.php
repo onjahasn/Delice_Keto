@@ -26,6 +26,7 @@ class Recette
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'recettes')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Categorie $categorie = null;
 
     #[ORM\OneToMany(mappedBy: 'recette', targetEntity: Etape::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -42,6 +43,9 @@ class Recette
 
     #[ORM\Column(nullable: true)]
     private ?int $nombrePersonne = null;
+
+    #[ORM\ManyToOne(inversedBy: 'recettes')]
+    private ?User $user = null;
 
     public function __construct()
     {
@@ -206,6 +210,18 @@ class Recette
     public function setNombrePersonne(?int $nombrePersonne): static
     {
         $this->nombrePersonne = $nombrePersonne;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

@@ -118,7 +118,6 @@ class CommentaireController extends AbstractController
             return $this->json($commentaire, Response::HTTP_OK, [], ['groups' => 'comment:read']);
         }
 
-        // Twig: Edition via formulaire HTML
         if ($request->isMethod('POST')) {
             $description = $request->request->get('description');
             if ($description) {
