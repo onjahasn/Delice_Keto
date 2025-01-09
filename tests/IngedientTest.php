@@ -15,16 +15,16 @@ class IngredientTest extends TestCase
         // Test du nom
         $nom = "Farine d'amande";
         $ingredient->setNom($nom);
-        $this->assertEquals($nom, $ingredient->getNom(), "Le nom de l'ingrédient doit correspondre à la valeur définie.");
+        $this->assertEquals($nom, $ingredient->getNom());
 
         // Test de la quantité
         $quantite = 200;
         $ingredient->setQuantite($quantite);
-        $this->assertIsInt($quantite, $ingredient->getQuantite(), "La quantité doit correspondre à la valeur définie.");
+        $this->assertIsInt($quantite, $ingredient->getQuantite());
 
         // Test de l'association avec une recette
         $recette = new Recette();
         $ingredient->setRecette($recette);
-        $this->assertSame($recette, $ingredient->getRecette(), "La recette associée doit correspondre à celle définie.");
+        $this->assertSame($recette, $ingredient->getRecette());
     }
 }
