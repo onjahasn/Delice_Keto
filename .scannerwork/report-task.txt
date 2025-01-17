@@ -2,5 +2,5 @@ projectKey=User-CDA
 serverUrl=http://localhost:9000
 serverVersion=24.12.0.100206
 dashboardUrl=http://localhost:9000/dashboard?id=User-CDA
-ceTaskId=4a5161aa-893e-4dfb-a2d5-b2b21b4a3a81
-ceTaskUrl=http://localhost:9000/api/ce/task?id=4a5161aa-893e-4dfb-a2d5-b2b21b4a3a81
+ceTaskId=15494e62-a7b3-4852-af59-1b6627850efd
+ceTaskUrl=http://localhost:9000/api/ce/task?id=15494e62-a7b3-4852-af59-1b6627850efd

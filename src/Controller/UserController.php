@@ -7,11 +7,9 @@ use App\Entity\User; // On importe la classe User. Cela permet de manipuler les 
 use App\Repository\UserRepository; // On importe le repository User pour accéder aux données de la table 'user' dans la base de données
 use Doctrine\ORM\EntityManagerInterface; // On importe EntityManagerInterface qui est utilisé pour interagir avec la base de données
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; // Importation de la classe de base de Symfony qui fournit des méthodes utiles pour les contrôleurs
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request; // Importation de la classe Request qui gère les données envoyées dans la requête HTTP
 use Symfony\Component\HttpFoundation\Response; // Importation de la classe Response qui est utilisée pour envoyer une réponse HTTP
 use Symfony\Component\Routing\Annotation\Route; // On importe l'annotation Route, qui permet de définir des routes pour ce contrôleur
-use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/users')] // Cette annotation définit la route principale pour toutes les actions du contrôleur. Toutes les routes dans ce contrôleur commenceront par '/users'
 class UserController extends AbstractController // Déclaration de la classe UserController qui étend la classe AbstractController (la classe de base des contrôleurs Symfony)
@@ -63,11 +61,18 @@ class UserController extends AbstractController // Déclaration de la classe Use
 
             $em->flush(); // Sauvegarde les modifications apportées à l'utilisateur dans la base de données
 
-            return $this->redirectToRoute('user_index'); // Redirige vers la page de la liste des utilisateurs après modification
+            return $this->redirectToRoute('user_show'); // Redirige vers la page de la liste des utilisateurs après modification
         }
 
         return $this->render('user/edit.html.twig', ['user' => $user]); // Affiche le formulaire avec les données de l'utilisateur à modifier
     }
+    
+    #[Route('/{id}/show', name: 'user_show', methods: ['GET'])] // La route '/{id}' permet d'afficher les détails d'un utilisateur
+    public function show(User $user): Response // La méthode show() affiche les détails d'un utilisateur
+    {
+        return $this->render('user/show.html.twig', ['user' => $user]); // Rendu de la vue 'user/show.html.twig', avec les détails de l'utilisateur passés à la vue
+    }
+
 
     #[Route('/{id}/delete', name: 'user_delete', methods: ['POST'])] // La route '/{id}/delete' permet de supprimer un utilisateur
     public function delete(User $user, EntityManagerInterface $em): Response // La méthode delete() permet de supprimer un utilisateur existant

@@ -49,42 +49,24 @@
 					</div>
 				</a>
 			</div>
-
 			<!-- Recettes Populaires -->
 			<div class="col-md-4 col-sm-4 d-flex justify-content-center">
-
 				<a href="#" style="text-decoration: none; width: 100%;">
 					<div class="card stat-card">
 						<div class="card-body text-dark">
 							<h4 class="card-title">Recettes Populaires</h4>
 							<p class="card-text">15</p>
-							{# <p class="card-text">
-																											{% if recettesPopulaires|length > 0 %}
-																												{{ recettesPopulaires[0].titre }}
-																											{% else %}
-																												Pas encore de recettes populaires.
-																											{% endif %}
-																										</p> #}
 						</div>
 					</div>
 				</a>
 			</div>
 			<!-- Nouvelles Recettes -->
 			<div class="col-md-4 col-sm-4 d-flex justify-content-center">
-
-				<a href="#" style="text-decoration: none; width: 100%;">
+				<a href="{{ path('dernieres_recettes') }}" style="text-decoration: none; width: 100%;">
 					<div class="card stat-card">
 						<div class="card-body text-dark">
 							<h4 class="card-title">Nouvelles Recettes</h4>
-							<p class="card-text">15</p>
-							{# <p class="card-text">
-																											{% if nouvellesRecettes|length > 0 %}
-																												{{ nouvellesRecettes|length }}
-																												Recettes ajoutées récemment
-																											{% else %}
-																												Pas encore de nouvelles recettes.
-																											{% endif %}
-																										</p> #}
+							<p class="card-text">Voir les 5 dernières recettes</p>
 						</div>
 					</div>
 				</a>

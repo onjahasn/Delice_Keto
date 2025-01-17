@@ -216,7 +216,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface // La cl
     }
 }
 
+pour scanner:
 
+sonar-scanner.bat -D"sonar.projectKey=User-CDA" -D"sonar.sources=." -D"sonar.host.url=http://localhost:9000" -D"sonar.token=sqp_b460d7c9841a66a84a6f4f1231960fd989883125"
 
 
 

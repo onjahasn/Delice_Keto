@@ -19,7 +19,7 @@ class RecetteController extends AbstractController
     #[Route('/recette', name: 'recette_index')]
     public function index(RecetteRepository $recetteRepository): Response
     {
-        $recettes = $recetteRepository->findAll();
+        $recettes = $recetteRepository->findAll();   
 
         return $this->render('recette/index.html.twig', [
             'recettes' => $recettes,
@@ -76,6 +76,8 @@ class RecetteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Associer la recette à l'utilisateur connecté
+            $recette->setUser($this->getUser());
             // Gestion de l'image
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
@@ -110,6 +112,12 @@ class RecetteController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function edit(Recette $recette, Request $request, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
+
+        // Vérifier si l'utilisateur est le propriétaire de la recette
+        if ($recette->getUser() !== $user) {
+            throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à modifier cette recette.');
+        }
         $form = $this->createForm(RecetteType::class, $recette);
         $form->handleRequest($request);
 
@@ -152,32 +160,33 @@ class RecetteController extends AbstractController
         ]);
     }
 
+    #[Route('/mes-recettes', name: 'user_recipes', methods: ['GET'])]
+    public function mesRecettes(RecetteRepository $recetteRepository): Response
+    {
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
 
-    // #[Route('/recettes/populaires', name: 'recette_populaires')]
-    // public function populaires(): Response
-    // {
-    //     $recettesPopulaires = $this->em->getRepository(Recette::class)->findBy(
-    //         [],
-    //         ['views' => 'DESC'], // Trier par popularité, par exemple par le champ "views"
-    //         5 // Limiter à 5 recettes populaires
-    //     );
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à vos recettes.');
+        }
 
-    //     return $this->render('recette/populaires.html.twig', [
-    //         'recettesPopulaires' => $recettesPopulaires,
-    //     ]);
-    // }
+        // Récupérer les recettes de l'utilisateur
+        $mesRecettes = $recetteRepository->findBy(['user' => $user]);
 
-    // #[Route('/recettes/nouvelles', name: 'recette_nouvelles')]
-    // public function nouvelles(): Response
-    // {
-    //     $nouvellesRecettes = $this->em->getRepository(Recette::class)->findBy(
-    //         [],
-    //         ['createdAt' => 'DESC'], // Trier par date de création
-    //         5 // Limiter à 5 recettes récentes
-    //     );
+        return $this->render('recette/mes_recettes.html.twig', [
+            'mesRecettes' => $mesRecettes,
+        ]);
+    }
 
-    //     return $this->render('recette/nouvelles.html.twig', [
-    //         'nouvellesRecettes' => $nouvellesRecettes,
-    //     ]);
-    // }
+    #[Route('/dernieres-recettes', name: 'dernieres_recettes')]
+    public function dernieresRecettes(RecetteRepository $recetteRepository): Response
+    {
+        // Récupérer les 5 dernières recettes
+        $dernieresRecettes = $recetteRepository->findBy([], ['createdAt' => 'DESC'], 5);
+
+        // Retourner la vue Twig
+        return $this->render('recette/dernieres_recettes.html.twig', [
+            'dernieresRecettes' => $dernieresRecettes,
+        ]);
+    }
 }

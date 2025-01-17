@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="formulaire-connexion carte mb-4">
+		<h3 class="text-center">Détails de l'utilisateur</h3>
+		<div class="mt-4">
+			<div class="form-group">
+				<label for="name">Nom</label>
+				<input type="text" id="name" name="name" class="form-control" value="{{ user.name }}" readonly>
+			</div>
+			<div class="form-group mt-3">
+				<label for="email">Email</label>
+				<input type="email" id="email" name="email" class="form-control" value="{{ user.email }}" readonly>
+			</div>
+			{% if is_granted("ROLE_ADMIN") %}
+				<div class="form-group mt-3">
+					<label for="roles">Rôles</label>
+					<input type="text" id="roles" name="roles" class="form-control" value="{{ user.roles|join(', ') }}" readonly>
+				</div>
+			{% endif %}
+		</div>
+		<div class="text-center mt-4">
+			<a href="{{ path('user_edit', { 'id': user.id }) }}" class="btn btn-primary">Modifier</a>
+		</div>
+	</div>
+{% endblock %}

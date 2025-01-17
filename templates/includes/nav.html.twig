@@ -61,6 +61,12 @@
 									<li>
 										<a class="dropdown-item" href="{{ path('recette_new') }}">Ajouter une recette</a>
 									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('user_show', { id: app.user.id }) }}">Mon profil</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('user_recipes') }}">Mes recettes</a>
+									</li>
 									{% if is_granted("ROLE_ADMIN") %}
 										<li>
 											<a class="dropdown-item" href="{{ path('list') }}">Commentaires</a>
