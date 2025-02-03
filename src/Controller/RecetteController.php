@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class RecetteController extends AbstractController
 {
@@ -188,5 +189,11 @@ class RecetteController extends AbstractController
         return $this->render('recette/dernieres_recettes.html.twig', [
             'dernieresRecettes' => $dernieresRecettes,
         ]);
+    }
+    
+    #[Route('/recette/{id}/comments-count', name: 'comments_count', methods: ['GET'])]
+    public function getCommentsCount(Recette $recette): JsonResponse
+    {
+        return new JsonResponse(['comments_count' => $recette->getCommentaires()->count()]);
     }
 }

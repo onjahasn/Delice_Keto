@@ -15,7 +15,7 @@ class AdminController extends AbstractController
     #[Route('/api/admin', name: 'api_admin_index', methods: ['GET'])]
     public function index(): JsonResponse
     {
-        return new JsonResponse(['message' => 'Welcome to the admin panel']);
+        return new JsonResponse(['message' => 'Bienvenue']);
     }
 
     #[Route('/api/users', name: 'api_users_index', methods: ['GET'])]
@@ -53,7 +53,7 @@ class AdminController extends AbstractController
         $em->persist($user);
         $em->flush();
 
-        return new JsonResponse(['message' => 'User created successfully'], 201);
+        return new JsonResponse(['message' => 'Utilisateur crée avec succés'], 201);
     }
 
     #[Route('/api/users/{id}/edit', name: 'api_user_edit', methods: ['PUT'])]
@@ -69,7 +69,7 @@ class AdminController extends AbstractController
 
         $em->flush();
 
-        return new JsonResponse(['message' => 'User updated successfully']);
+        return new JsonResponse(['message' => 'Utilisateur mis à jour avec succés']);
     }
 
     #[Route('/api/users/{id}/delete', name: 'api_user_delete', methods: ['DELETE'])]
@@ -78,6 +78,6 @@ class AdminController extends AbstractController
         $em->remove($user);
         $em->flush();
 
-        return new JsonResponse(['message' => 'User deleted successfully']);
+        return new JsonResponse(['message' => 'Utilisateur supprimer avec succés']);
     }
 }

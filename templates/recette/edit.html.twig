@@ -4,21 +4,64 @@
 {% endblock %}
 
 {% block body %}
-	<div class="formulaire-ajout-recette carte">
-		<h2 class="text-center mt-2">Modifier une recette</h2>
+	{# <div class="formulaire-ajout-recette carte">
+			<h2 class="text-center mt-2">Modifier une recette</h2>
+	
+			<div class="my-4">
+				{{ form_start(form, {'method': 'POST', 'action': path('recette_edit', { 'id': recette.id })}) }}
+	
+				{{ form_widget(form) }}
+	
+				<button type="submit" class="btn text-dark mt-3">Modifier</button>
+	
+				<a href="{{ path('recette_index') }}" class="btn text-dark mt-3">Retour</a>
+	
+				{{ form_end(form) }}
+			</div>
+		</div> #}
+
+
+	<div class="formulaire-ajout-recette carte mb-4">
+		<h2 class="text-center mt-2">Ajouter une recette</h2>
 
 		<div class="my-4">
 			{{ form_start(form, {'method': 'POST', 'action': path('recette_edit', { 'id': recette.id })}) }}
 
-			{{ form_widget(form) }}
 
-			<button type="submit" class="btn text-dark mt-3">Modifier</button>
+			{{ form_row(form.titre) }}
+			{{ form_row(form.image) }}
+			{{ form_row(form.tempsPreparation) }}
+			{{ form_row(form.nombrePersonne) }}
+			{{ form_row(form.categorie) }}
+			<div id="ingredient-container" data-prototype="{{ form_widget(form.ingredients.vars.prototype)|e('html_attr') }}">
+				{% for ingredientForm in form.ingredients %}
+					<div class="ingredient-item">
+						{{ form_row(ingredientForm) }}
+						<button type="button" class="btn btn-danger btn-sm remove-ingredient">Supprimer</button>
+					</div>
+				{% endfor %}
+			</div>
+			<button type="button" id="add-ingredient" class="btn mt-2">Ajouter un ingrédient</button>
 
-			<a href="{{ path('recette_index') }}" class="btn text-dark mt-3">Retour</a>
+			<div id="etape-container" data-prototype="{{ form_widget(form.etapes.vars.prototype)|e('html_attr') }}">
+				{% for etapeForm in form.etapes %}
+					<div class="etape-item">
+						{{ form_row(etapeForm) }}
+						<button type="button" class="btn btn-danger btn-sm remove-etape float-right">
+							<i class="fa-solid fa-trash"></i>
+						</button>
+					</div>
+				{% endfor %}
+			</div>
+			<button type="button" id="add-etape" class="btn my-2">Ajouter une étape</button>
+			<br/>
+			{# {{ form_row(form.createdAt) }} #}
+<button type="submit" class="btn text-dark mt-3">Modifier</button>
+
+<a href="{{ path('recette_index') }}" class="btn text-dark mt-3">Retour</a>
 
 			{{ form_end(form) }}
 		</div>
 	</div>
 
 {% endblock %}
-

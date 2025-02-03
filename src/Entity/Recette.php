@@ -47,6 +47,12 @@ class Recette
     #[ORM\ManyToOne(inversedBy: 'recettes')]
     private ?User $user = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $nombreVues = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $nombreLikes = null;
+
     public function __construct()
     {
         $this->etapes = new ArrayCollection();
@@ -222,6 +228,30 @@ class Recette
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getNombreVues(): ?int
+    {
+        return $this->nombreVues;
+    }
+
+    public function setNombreVues(?int $nombreVues): static
+    {
+        $this->nombreVues = $nombreVues;
+
+        return $this;
+    }
+
+    public function getNombreLikes(): ?int
+    {
+        return $this->nombreLikes;
+    }
+
+    public function setNombreLikes(?int $nombreLikes): static
+    {
+        $this->nombreLikes = $nombreLikes;
 
         return $this;
     }
