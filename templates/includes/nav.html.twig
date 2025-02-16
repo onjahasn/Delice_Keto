@@ -49,7 +49,9 @@
 
 							{% if is_granted("ROLE_ADMIN") %}
 								<li class="nav-item">
-									<a class="nav-link" href="{{ path('user_index') }}">Utilisateurs</a>
+									<a class="nav-link px-4" href="{{ path('user_index') }}">
+										<i class="fa-regular fa-user"></i>
+									</a>
 								</li>
 							{% endif %}
 
