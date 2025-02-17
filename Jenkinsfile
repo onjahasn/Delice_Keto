@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     environment {
-        APP_ENV = 'prod'  // 🔥 Forcer Symfony en mode production
+        APP_ENV = 'prod'
         APP_DEBUG = '0'
-        DATABASE_URL = credentials('database-url')  // Injecte la base de données
-        MAILER_DSN = credentials('mailer-url')  // Injecte le Mailer DSN
+        DATABASE_URL = credentials('database-url')
+        MAILER_DSN = credentials('mailer-url')
     }
 
     stages {
@@ -26,10 +26,23 @@ pipeline {
         stage('Créer .env.local avec les bonnes valeurs') {
             steps {
                 sh '''
-                    echo "APP_ENV=$APP_ENV" > .env.local
-                    echo "APP_DEBUG=$APP_DEBUG" >> .env.local
+                    echo "APP_ENV=prod" > .env.local
+                    echo "APP_DEBUG=0" >> .env.local
                     echo "DATABASE_URL=$DATABASE_URL" >> .env.local
                     echo "MAILER_DSN=$MAILER_DSN" >> .env.local
+                '''
+            }
+        }
+
+        stage('Générer les assets Webpack Encore') {
+            steps {
+                sh '''
+                    if [ -f package.json ]; then
+                        npm install
+                        npm run build
+                    else
+                        echo "Pas de package.json, étape ignorée"
+                    fi
                 '''
             }
         }
@@ -43,20 +56,13 @@ pipeline {
                 '''
             }
         }
- 
+
         stage('Déployer le projet') {
             steps {
                 sh '''
                     sudo rsync -avz --delete --omit-dir-times --no-perms . /var/www/deliceketo/
                     sudo chown -R www-data:www-data /var/www/deliceketo/
                     sudo chmod -R 775 /var/www/deliceketo/
-                '''
-            }
-        }
-
-        stage('Redémarrer Apache') {
-            steps {
-                sh '''
                     sudo systemctl restart apache2
                 '''
             }
