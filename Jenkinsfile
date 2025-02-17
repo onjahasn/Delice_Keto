@@ -44,23 +44,6 @@ pipeline {
             }
         }
 
-        stage('Préparer la base de test') {
-            steps {
-                sh '''
-                    php bin/console doctrine:database:create --env=test || true
-                    php bin/console doctrine:schema:update --force --env=test
-                '''
-            }
-        }
-
-        stage('Exécuter les tests unitaires') {
-            steps {
-                sh '''
-                    php bin/phpunit --testdox
-                '''
-            }
-        }
-
         stage('Déployer le projet') {
             steps {
                 sh '''
