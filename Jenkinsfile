@@ -47,7 +47,7 @@ pipeline {
         stage('Déployer le projet') {
             steps {
                 sh '''
-                    rsync -avz --delete --chown=jenkins:www-data --no-perms . /var/www/deliceketo/
+                    sudo rsync -avz --delete --omit-dir-times --no-perms . /var/www/deliceketo/
                     chown -R www-data:www-data /var/www/deliceketo/
                     chmod -R 775 /var/www/deliceketo/
                 '''
