@@ -2,8 +2,10 @@ pipeline {
     agent any
 
     environment {
+        APP_ENV = 'prod'  // 🔥 Définit Symfony en mode production
+        APP_DEBUG = '0'
         DATABASE_URL = credentials('database-url')  // Injecte la base de données
-        MAILER_DSN = credentials('mailer-url')  // Injecte le Mailer DSN depuis Jenkins
+        MAILER_DSN = credentials('mailer-url')  // Injecte le Mailer DSN
     }
 
     stages {
@@ -21,12 +23,23 @@ pipeline {
             }
         }
 
-        stage('Créer .env.local') {
+        stage('Créer .env.local avec les bonnes valeurs') {
             steps {
                 sh '''
-                    touch .env.local
-                    echo "DATABASE_URL=$DATABASE_URL" > .env.local
+                    echo "APP_ENV=$APP_ENV" > .env.local
+                    echo "APP_DEBUG=$APP_DEBUG" >> .env.local
+                    echo "DATABASE_URL=$DATABASE_URL" >> .env.local
                     echo "MAILER_DSN=$MAILER_DSN" >> .env.local
+                '''
+            }
+        }
+
+        stage('Effacer et réchauffer le cache Symfony') {
+            steps {
+                sh '''
+                    rm -rf var/cache/*
+                    php bin/console cache:clear --env=prod --no-debug
+                    php bin/console cache:warmup --env=prod
                 '''
             }
         }
