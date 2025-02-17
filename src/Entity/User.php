@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints as Assert; // Ajout pour la validation
 
 #[ORM\Entity]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -23,19 +22,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'Le mot de passe est obligatoire.')]
-    #[Assert\Length(
-        min: 8,
-        minMessage: 'Le mot de passe doit contenir au moins {{ 8 }} caractères.'
-    )]
-    #[Assert\Regex(
-        pattern: '/[A-Z]/',
-        message: 'Le mot de passe doit contenir au moins une lettre majuscule.'
-    )]
-    #[Assert\Regex(
-        pattern: '/[\W_]/',
-        message: 'Le mot de passe doit contenir au moins un caractère spécial (ex. !@#$%^&*).'
-    )]
     private ?string $password = null;
 
     #[Groups(['users.read'])]

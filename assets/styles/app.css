@@ -206,9 +206,7 @@ a {
         display: flex;
         flex-direction: column;
         align-items: center;
-        /* Centre la navbar */
         text-align: center;
-        /* Centre le texte */
     }
 
     .navbar-nav {
@@ -225,7 +223,7 @@ a {
     }
 
     .navbar-nav .nav-link {
-        text-transform: uppercase;
+        /* text-transform: uppercase; */
         width: 100%;
         /* Assure la même largeur */
         padding: 10px 20px;

@@ -28,13 +28,21 @@ class UserController extends AbstractController // Déclaration de la classe Use
         if ($request->isMethod('POST')) { // Si la méthode de la requête est POST (c'est-à-dire que le formulaire a été soumis)
             $user = new User(); // On crée une nouvelle instance de l'entité User
 
+            $password = $request->request->get('password'); // Récupère le mot de passe depuis la requête
+            $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{12,}$/'; // Définition du pattern pour le mot de passe
+
+            if (!preg_match($pattern, $password)) { // Vérifie si le mot de passe respecte le pattern
+                $this->addFlash('error', 'Le mot de passe doit contenir au moins 12 caractères et inclure des minuscules, majuscules, chiffres et caractères spéciaux.');
+                return $this->redirectToRoute('user_new'); // Redirige vers le formulaire de création en cas d'erreur
+            }
+
             // On récupère les données soumises dans le formulaire et on les attribue à l'entité $user
             $user->setEmail($request->request->get('email')); // Attribue l'email depuis la requête
             $user->setName($request->request->get('name')); // Attribue le nom de l'utilisateur depuis la requête
             $user->setUserName($request->request->get('username')); // Attribue le nom de l'utilisateur depuis la requête
 
             // Hachage du mot de passe avant de le sauvegarder dans la base de données
-            $hashedPassword = password_hash($request->request->get('password'), PASSWORD_BCRYPT); // Utilise bcrypt pour sécuriser le mot de passe
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT); // Utilise bcrypt pour sécuriser le mot de passe
             $user->setPassword($hashedPassword); // On attribue le mot de passe haché à l'utilisateur
 
             $role = $request->request->get('role', 'ROLE_USER'); // On récupère le rôle du formulaire. Par défaut, il sera 'ROLE_USER'
@@ -43,7 +51,7 @@ class UserController extends AbstractController // Déclaration de la classe Use
             $em->persist($user); // Prépare l'entité $user à être sauvegardée dans la base de données
             $em->flush(); // Sauvegarde réellement les données dans la base de données
 
-            return $this->redirectToRoute('user_index'); // Redirige l'utilisateur vers la page de la liste des utilisateurs après l'ajout
+            return $this->redirectToRoute('app_home'); // Redirige l'utilisateur vers la page de la liste des utilisateurs après l'ajout
         }
 
         return $this->render('user/new.html.twig'); // Si la méthode est GET (formulaire de création), on affiche le formulaire
