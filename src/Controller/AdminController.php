@@ -27,6 +27,7 @@ class AdminController extends AbstractController
             return [
                 'id' => $user->getId(),
                 'name' => $user->getName(),
+                'username' => $user->getUserName(),
                 'email' => $user->getEmail(),
                 'roles' => $user->getRoles(),
             ];
@@ -42,6 +43,7 @@ class AdminController extends AbstractController
 
         $user = new User();
         $user->setName($data['name']);
+        $user->setUserName($data['username']);
         $user->setEmail($data['email']);
 
         $hashedPassword = password_hash($data['password'], PASSWORD_BCRYPT);
@@ -62,6 +64,7 @@ class AdminController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         $user->setName($data['name']);
+        $user->setUserName($data['username']);
         $user->setEmail($data['email']);
 
         $role = $data['role'] ?? 'ROLE_USER';

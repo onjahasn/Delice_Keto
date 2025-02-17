@@ -25,8 +25,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     #[Assert\NotBlank(message: 'Le mot de passe est obligatoire.')]
     #[Assert\Length(
-        min: 12,
-        minMessage: 'Le mot de passe doit contenir au moins {{ 12 }} caractères.'
+        min: 8,
+        minMessage: 'Le mot de passe doit contenir au moins {{ 8 }} caractères.'
     )]
     #[Assert\Regex(
         pattern: '/[A-Z]/',
@@ -50,6 +50,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(targetEntity: Recette::class, mappedBy: 'user')]
     private Collection $recettes;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $userName = null;
 
     public function __construct()
     {
@@ -168,6 +171,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $recette->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUserName(): ?string
+    {
+        return $this->userName;
+    }
+
+    public function setUserName(?string $userName): static
+    {
+        $this->userName = $userName;
 
         return $this;
     }

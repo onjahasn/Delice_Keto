@@ -12,6 +12,7 @@
 				<input type="password" id="password" name="_password" class="form-control" required>
 			</div>
 			<button type="submit" class="btn mt-3">Se connecter</button>
+			<a href="{{ path('app_forgot_password_request') }}" class="btn mt-3">Mot de passe oublié</a>
 		</form>
 		{% if error %}
 			<div class="alert alert-danger mt-3">

@@ -34,15 +34,15 @@
 								<a href="{{ path('recette_show', { 'id': recette.id }) }}" class="btn">Voir détail</a>
 							</div>
 
-							{# {% if is_granted('ROLE_ADMIN') %}
-																						<div class="mt-2">
-																							<a href="{{ path('recette_edit', {'id': recette.id}) }}" class="btn btn-success btn-sm">Modifier</a>
-																							<form action="{{ path('recette_delete', {id: recette.id}) }}" method="post" style="display: inline;">
-																								<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ recette.id) }}">
-																								<button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
-																							</form>
-																						</div>
-																					{% endif %} #}
+							{% if is_granted('ROLE_ADMIN') %}
+								<div class="mt-2">
+									<a href="{{ path('recette_edit', {'id': recette.id}) }}" class="btn btn-success btn-sm">Modifier</a>
+									<form action="{{ path('recette_delete', {id: recette.id}) }}" method="post" style="display: inline;">
+										<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ recette.id) }}">
+										<button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+									</form>
+								</div>
+							{% endif %}
 
 							<div class="interaction mt-3">
 								<div class="d-flex">
@@ -59,9 +59,9 @@
 								</div>
 							</div>
 							{# <p class="card-text mt-2">
-								<span class="badge bg-secondary">Catégorie :
-									{{ recette.categorie.nom }}</span>
-							</p> #}
+															<span class="badge bg-secondary">Catégorie :
+																{{ recette.categorie.nom }}</span>
+														</p> #}
 						</div>
 					</div>
 				{% else %}

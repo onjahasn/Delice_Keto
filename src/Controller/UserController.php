@@ -29,8 +29,9 @@ class UserController extends AbstractController // Déclaration de la classe Use
             $user = new User(); // On crée une nouvelle instance de l'entité User
 
             // On récupère les données soumises dans le formulaire et on les attribue à l'entité $user
-            $user->setName($request->request->get('name')); // Attribue le nom de l'utilisateur depuis la requête
             $user->setEmail($request->request->get('email')); // Attribue l'email depuis la requête
+            $user->setName($request->request->get('name')); // Attribue le nom de l'utilisateur depuis la requête
+            $user->setUserName($request->request->get('username')); // Attribue le nom de l'utilisateur depuis la requête
 
             // Hachage du mot de passe avant de le sauvegarder dans la base de données
             $hashedPassword = password_hash($request->request->get('password'), PASSWORD_BCRYPT); // Utilise bcrypt pour sécuriser le mot de passe
@@ -54,6 +55,7 @@ class UserController extends AbstractController // Déclaration de la classe Use
         if ($request->isMethod('POST')) { // Si la requête est de type POST (formulaire soumis)
             // Récupère et met à jour les informations de l'utilisateur
             $user->setName($request->request->get('name')); // Modifie le nom de l'utilisateur
+            $user->setUserName($request->request->get('username')); // Modifie le nom de l'utilisateur
             $user->setEmail($request->request->get('email')); // Modifie l'email de l'utilisateur
 
             $role = $request->request->get('role', 'ROLE_USER'); // Récupère et met à jour le rôle de l'utilisateur
