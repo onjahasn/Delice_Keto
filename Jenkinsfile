@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Cloner le dépôt') {
             steps {
-                git branch: 'main', url: 'git@github.com:onjahasn/user_CDA.git'
+                git branch: 'main', url: 'https://github.com/onjahasn/user_CDA.git'
             }
         }
 
