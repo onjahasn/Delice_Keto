@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        APP_ENV = 'prod'  // 🔥 Définit Symfony en mode production
+        APP_ENV = 'prod'  // 🔥 Forcer Symfony en mode production
         APP_DEBUG = '0'
         DATABASE_URL = credentials('database-url')  // Injecte la base de données
         MAILER_DSN = credentials('mailer-url')  // Injecte le Mailer DSN
@@ -43,12 +43,13 @@ pipeline {
                 '''
             }
         }
-
+ 
         stage('Déployer le projet') {
             steps {
                 sh '''
-                    rsync -avz --delete . /var/www/deliceketo/
+                    rsync -avz --delete --chown=jenkins:www-data --no-perms . /var/www/deliceketo/
                     chown -R www-data:www-data /var/www/deliceketo/
+                    chmod -R 775 /var/www/deliceketo/
                 '''
             }
         }
