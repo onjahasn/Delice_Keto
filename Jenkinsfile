@@ -12,14 +12,18 @@ pipeline {
         MAILER_DSN = credentials('mailer-url')
     }
 
+    // Étape 1 : Cloner le dépôt Git dans le répertoire défini
+    // Suppression de l'ancien répertoire pour éviter les conflits
     stages {
         stage('Cloner le dépôt') {
             steps {
-                sh "rm -rf ${DEPLOY_DIR}" // Nettoyage du précédent build
+                sh "rm -rf ${DEPLOY_DIR}"
                 sh "git clone -b ${GIT_BRANCH} ${GIT_REPO} ${DEPLOY_DIR}"
             }
         }
 
+        // Étape 2 : Installer les dépendances PHP
+        // Utilisation de Composer pour optimiser l'autoloader
         stage('Installation des dépendances') {
             steps {
                 dir("${DEPLOY_DIR}") {
@@ -28,41 +32,40 @@ pipeline {
             }
         }
 
-        stage('Configuration de l\'environnement') {
+        // Étape 3 : Configuration de l'environnement
+        // Création du fichier .env.local avec les bonnes valeurs
+        stage('Créer .env.local avec les bonnes valeurs') {
             steps {
-                script {
-                    def envLocal = """
-                    APP_ENV=${APP_ENV}
-                    APP_DEBUG=${APP_DEBUG}
-                    DATABASE_URL=${DATABASE_URL}
-                    MAILER_DSN=${MAILER_DSN}
-                    """.stripIndent()
-                    
-                    writeFile file: '.env.local', text: envLocal
-                }
+                sh '''
+                    echo "APP_ENV=prod" > .env.local
+                    echo "APP_DEBUG=0" >> .env.local
+                    echo "DATABASE_URL=$DATABASE_URL" >> .env.local
+                    echo "MAILER_DSN=$MAILER_DSN" >> .env.local
+                '''
             }
         }
 
+        // Étape 4 : Migration de la base de données
+        // Création de la base si elle n'existe pas et application des migrations
         stage('Migration de la base de données') {
             steps {
                 dir("${DEPLOY_DIR}") {
                     script {
-                        // Création de la base si elle n'existe pas
                         sh 'php bin/console doctrine:database:create --if-not-exists --env=prod'
-                        
-                        // Exécution des migrations
                         sh 'php bin/console doctrine:migrations:migrate --no-interaction --env=prod'
                     }
                 }
             }
         }
 
-        stage('Compile Assets') {
+        // Étape 5 : Compilation des assets du projet
+        stage('Compilation des assets') {
             steps {
                 sh 'php bin/console asset-map:compile'
             }
         }
 
+        // Étape 6 : Nettoyage et optimisation du cache Symfony
         stage('Nettoyage du cache') {
             steps {
                 dir("${DEPLOY_DIR}") {
@@ -72,7 +75,8 @@ pipeline {
             }
         }
 
-
+        // Étape 7 : Déploiement du projet
+        // Synchronisation des fichiers avec le serveur, configuration des permissions et redémarrage d'Apache
         stage('Déployer le projet') {
             steps {
                 sh '''
@@ -94,95 +98,3 @@ pipeline {
         }
     }
 }
-
-
-
-// pipeline {
-//     agent any
-
-//     environment {
-//         APP_ENV = 'prod'
-//         APP_DEBUG = '0'
-//         DATABASE_URL = credentials('database-url')
-//         MAILER_DSN = credentials('mailer-url')
-//     }
-
-//     stages {
-//         stage('Cloner le dépôt') {
-//             steps {
-//                 git branch: 'main', url: 'https://github.com/onjahasn/user_CDA.git'
-//             }
-//         }
-
-//         stage('Installer les dépendances Symfony') {
-//             steps {
-//                 sh '''
-//                     composer install --no-dev --optimize-autoloader
-//                 '''
-//             }
-//         }
-
-//         stage('Créer .env.local avec les bonnes valeurs') {
-//             steps {
-//                 sh '''
-//                     echo "APP_ENV=prod" > .env.local
-//                     echo "APP_DEBUG=0" >> .env.local
-//                     echo "DATABASE_URL=$DATABASE_URL" >> .env.local
-//                     echo "MAILER_DSN=$MAILER_DSN" >> .env.local
-//                 '''
-//             }
-//         }
-
-//         stage('Générer les assets Webpack Encore') {
-//             steps {
-//                 sh '''
-//                     if [ -f package.json ]; then
-//                         npm install
-//                         npm run build
-//                     else
-//                         echo "Pas de package.json, étape ignorée"
-//                     fi
-//                 '''
-//             }
-//         }
-
-//         stage('Effacer et réchauffer le cache Symfony') {
-//             steps {
-//                 sh '''
-//                     rm -rf var/cache/*
-//                     php bin/console cache:clear --env=prod --no-debug
-//                     php bin/console cache:warmup --env=prod
-//                 '''
-//             }
-//         }
-
-//         stage('Préparer la base de test') {
-//             steps {
-//                 sh '''
-//                     php bin/console doctrine:database:create --env=test || true
-//                     php bin/console doctrine:schema:update --force --env=test
-//                 '''
-//             }
-//         }
-
-//         stage('Exécuter les tests unitaires') {
-//             steps {
-//                 sh '''
-//                     php bin/phpunit --testdox
-//                 '''
-//             }
-//         }
-
-        // stage('Déployer le projet') {
-        //     steps {
-        //         sh '''
-        //             sudo rsync -avz --delete --omit-dir-times --no-perms . /var/www/deliceketo/
-        //             sudo chown -R www-data:www-data /var/www/deliceketo/
-        //             sudo chmod -R 775 /var/www/deliceketo/
-        //             sudo systemctl restart apache2
-        //         '''
-        //     }
-        // }
-//     }
-// }
-
