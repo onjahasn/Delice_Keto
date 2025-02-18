@@ -56,12 +56,14 @@ pipeline {
         }
 
         stage('Migration de la base de données') {
-            steps {
-                sh '''
-                    php bin/console doctrine:database:create --if-not-exists --env=prod
-                    php bin/console doctrine:migrations:migrate --no-interaction --env=prod
-                '''
+            script {
+            def migration_status = sh(script: 'php bin/console doctrine:migrations:status --env=prod | grep "New migrations"', returnStatus: true)
+            if (migration_status == 0) {
+                sh 'php bin/console doctrine:migrations:migrate --no-interaction --env=prod'
+            } else {
+                echo 'Aucune nouvelle migration à appliquer.'
             }
+        }
         }
 
         stage('Nettoyage et optimisation du cache') {
