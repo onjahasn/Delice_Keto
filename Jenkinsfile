@@ -79,29 +79,15 @@ pipeline {
             }
         }
 
-        // stage('Préparer la base de test') {
-        //     steps {
-        //         sh '''
-        //             php bin/console doctrine:database:create --env=test || true
-        //             php bin/console doctrine:schema:update --force --env=test
-        //         '''
-        //     }
-        // }
 
-        // stage('Exécuter les tests unitaires') {
-        //     steps {
-        //         sh '''
-        //             php bin/phpunit --testdox
-        //         '''
-        //     }
-        // }
-
-        stage('Déploiement') {
+        stage('Déployer le projet') {
             steps {
-                sh "rm -rf /var/www/html/${DEPLOY_DIR}" // Supprime le dossier de destination
-                sh "mkdir /var/www/html/${DEPLOY_DIR}" // Recréé le dossier de destination
-                sh "cp -rT ${DEPLOY_DIR} /var/www/html/${DEPLOY_DIR}"
-                sh "chmod -R 775 /var/www/html/${DEPLOY_DIR}/var"
+                sh '''
+                    sudo rsync -avz --delete --omit-dir-times --no-perms . /var/www/deliceketo/
+                    sudo chown -R www-data:www-data /var/www/deliceketo/
+                    sudo chmod -R 775 /var/www/deliceketo/
+                    sudo systemctl restart apache2
+                '''
             }
         }
     }
@@ -194,15 +180,15 @@ pipeline {
 //             }
 //         }
 
-//         stage('Déployer le projet') {
-//             steps {
-//                 sh '''
-//                     sudo rsync -avz --delete --omit-dir-times --no-perms . /var/www/deliceketo/
-//                     sudo chown -R www-data:www-data /var/www/deliceketo/
-//                     sudo chmod -R 775 /var/www/deliceketo/
-//                     sudo systemctl restart apache2
-//                 '''
-//             }
-//         }
+        // stage('Déployer le projet') {
+        //     steps {
+        //         sh '''
+        //             sudo rsync -avz --delete --omit-dir-times --no-perms . /var/www/deliceketo/
+        //             sudo chown -R www-data:www-data /var/www/deliceketo/
+        //             sudo chmod -R 775 /var/www/deliceketo/
+        //             sudo systemctl restart apache2
+        //         '''
+        //     }
+        // }
 //     }
 // }
