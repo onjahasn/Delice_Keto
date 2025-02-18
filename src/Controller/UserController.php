@@ -29,7 +29,7 @@ class UserController extends AbstractController // Déclaration de la classe Use
             $user = new User(); // On crée une nouvelle instance de l'entité User
 
             $password = $request->request->get('password'); // Récupère le mot de passe depuis la requête
-            $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{12,}$/'; // Définition du pattern pour le mot de passe
+            $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{8,}$/'; // Définition du pattern pour le mot de passe
 
             if (!preg_match($pattern, $password)) { // Vérifie si le mot de passe respecte le pattern
                 $this->addFlash('error', 'Le mot de passe doit contenir au moins 12 caractères et inclure des minuscules, majuscules, chiffres et caractères spéciaux.');
