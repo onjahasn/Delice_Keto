@@ -183,7 +183,7 @@ class RecetteController extends AbstractController
     public function dernieresRecettes(RecetteRepository $recetteRepository): Response
     {
         // Récupérer les 5 dernières recettes
-        $dernieresRecettes = $recetteRepository->findBy([], ['createdAt' => 'DESC'], 5);
+        $dernieresRecettes = $recetteRepository->findBy([], ['createdAt' => 'DESC'], 4);
 
         // Retourner la vue Twig
         return $this->render('recette/dernieres_recettes.html.twig', [
