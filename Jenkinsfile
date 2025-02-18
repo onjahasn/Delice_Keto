@@ -57,13 +57,28 @@ pipeline {
         // }
 
         stage('Migration de la base de données') {
-            steps {
-                dir("${DEPLOY_DIR}") {
-                    sh 'php bin/console doctrine:database:create --if-not-exists --env=prod'
-                    sh 'php bin/console doctrine:migrations:migrate --no-interaction --env=prod'
-                }
+    steps {
+        dir("${DEPLOY_DIR}") {
+            script {
+                // Création de la base si elle n'existe pas
+                sh 'php bin/console doctrine:database:create --if-not-exists --env=prod'
+
+                // Synchronisation du stockage des migrations
+                sh 'php bin/console doctrine:migrations:sync-metadata-storage --env=prod'
+
+                // Vérification des migrations déjà appliquées
+                def migrationStatus = sh(script: 'php bin/console doctrine:migrations:status --env=prod', returnStdout: true)
+                echo "Migration Status: ${migrationStatus}"
+
+                // Vérification de la validité du schéma
+                sh 'php bin/console doctrine:schema:validate --skip-sync --env=prod'
+
+                // Application des migrations en s'assurant qu'on ne tente pas de recréer une table existante
+                sh 'php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration --env=prod'
             }
         }
+    }
+}
 
         stage('Nettoyage du cache') {
             steps {
