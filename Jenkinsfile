@@ -15,15 +15,16 @@ pipeline {
     stages {
         stage('Cloner le dépôt') {
             steps {
-                git branch: "${GIT_BRANCH}", url: "${GIT_REPO}"
+                sh "rm -rf ${DEPLOY_DIR}" // Nettoyage du précédent build
+                sh "git clone -b ${GIT_BRANCH} ${GIT_REPO} ${DEPLOY_DIR}"
             }
         }
 
         stage('Installation des dépendances') {
             steps {
-                sh '''
-                    composer install --no-dev --optimize-autoloader
-                '''
+                dir("${DEPLOY_DIR}") {
+                    sh 'composer install --optimize-autoloader'
+                }
             }
         }
 
@@ -42,39 +43,34 @@ pipeline {
             }
         }
 
-        stage('Générer les assets Webpack Encore') {
-            steps {
-                sh '''
-                    if [ -f package.json ]; then
-                        npm install
-                        npm run build
-                    else
-                        echo "Pas de package.json, étape ignorée"
-                    fi
-                '''
-            }
-        }
+        // stage('Générer les assets Webpack Encore') {
+        //     steps {
+        //         sh '''
+        //             if [ -f package.json ]; then
+        //                 npm install
+        //                 npm run build
+        //             else
+        //                 echo "Pas de package.json, étape ignorée"
+        //             fi
+        //         '''
+        //     }
+        // }
 
         stage('Migration de la base de données') {
             steps {
-                script {
-                    def migration_status = sh(script: 'php bin/console doctrine:migrations:status --env=prod | grep "New migrations" || true', returnStatus: true)
-                    if (migration_status == 0) {
-                        echo 'Nouvelles migrations détectées. Exécution...'
-                        sh 'php bin/console doctrine:migrations:migrate --no-interaction --env=prod'
-                    } else {
-                        echo 'Aucune nouvelle migration à appliquer.'
-                    }
+                dir("${DEPLOY_DIR}") {
+                    sh 'php bin/console doctrine:database:create --if-not-exists --env=prod'
+                    sh 'php bin/console doctrine:migrations:migrate --no-interaction --env=prod'
                 }
             }
         }
 
-        stage('Nettoyage et optimisation du cache') {
+        stage('Nettoyage du cache') {
             steps {
-                sh '''
-                    php bin/console cache:clear --env=prod --no-debug
-                    php bin/console cache:warmup --env=prod
-                '''
+                dir("${DEPLOY_DIR}") {
+                    sh 'php bin/console cache:clear --env=prod'
+                    sh 'php bin/console cache:warmup'
+                }
             }
         }
 
@@ -97,12 +93,10 @@ pipeline {
 
         stage('Déploiement') {
             steps {
-                sh '''
-                    sudo rsync -avz --delete --omit-dir-times --no-perms . /var/www/${DEPLOY_DIR}/
-                    sudo chown -R www-data:www-data /var/www/${DEPLOY_DIR}/
-                    sudo chmod -R 775 /var/www/${DEPLOY_DIR}/
-                    sudo systemctl restart apache2
-                '''
+                sh "rm -rf /var/www/html/${DEPLOY_DIR}" // Supprime le dossier de destination
+                sh "mkdir /var/www/html/${DEPLOY_DIR}" // Recréé le dossier de destination
+                sh "cp -rT ${DEPLOY_DIR} /var/www/html/${DEPLOY_DIR}"
+                sh "chmod -R 775 /var/www/html/${DEPLOY_DIR}/var"
             }
         }
     }
