@@ -43,19 +43,6 @@ pipeline {
             }
         }
 
-        // stage('Générer les assets Webpack Encore') {
-        //     steps {
-        //         sh '''
-        //             if [ -f package.json ]; then
-        //                 npm install
-        //                 npm run build
-        //             else
-        //                 echo "Pas de package.json, étape ignorée"
-        //             fi
-        //         '''
-        //     }
-        // }
-
         stage('Migration de la base de données') {
             steps {
                 dir("${DEPLOY_DIR}") {
@@ -192,3 +179,17 @@ pipeline {
         // }
 //     }
 // }
+
+
+        // stage('Générer les assets Webpack Encore') {
+        //     steps {
+        //         sh '''
+        //             if [ -f package.json ]; then
+        //                 npm install
+        //                 npm run build
+        //             else
+        //                 echo "Pas de package.json, étape ignorée"
+        //             fi
+        //         '''
+        //     }
+        // }
