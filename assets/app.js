@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 import './styles/app.css';
-import * as bootstrap from "bootstrap";
+// import * as bootstrap from "bootstrap";
 window.bootstrap = bootstrap;
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
