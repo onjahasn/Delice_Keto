@@ -45,7 +45,17 @@ A user management system built with Symfony, featuring authentication via a web 
    
 8.**Update the .env file with the JWT configuration**
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-rbsA2VBKQ1hA4LPCXxUgVrG8FRJsZZbJbG1zP9pv9S8aE3aRoq2ykh6dP4MquU6g" crossorigin="anonymous"></script>
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirection si le fichier/dossier n'existe pas
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Réécrit l'URL pour qu'elle pointe vers index.php
+    RewriteRule ^.*$ index.php [QSA,L]
+
+</IfModule>
 
 
 pour scanner:

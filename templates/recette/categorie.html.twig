@@ -1,75 +1,58 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Recettes par Catégorie
-{% endblock %}
+{% block title %}Recettes par Catégorie{% endblock %}
 
 {% block body %}
-	<section class="mt-5">
-		<div class="container recette">
-			<div class="row pb-3">
-				{% for recette in recettes %}
-					<div class="col-md-6 col-lg-3 mb-4">
-						<div class="card h-100 p-3 carte">
-							{% if recette.image %}
-								<img src="{{ asset('uploads/' ~ recette.image) }}" alt="Recette" class="card-img-top photo-card">
-							{% else %}
-								<img src="{{ asset('images/image2.jpg') }}" alt="Recettte par défaut" class="card-img-top photo-card">
-							{% endif %}
+    <section class="mt-5">
+        <div class="container recette">
+            <div class="row pb-3">
+                {% for recette in recettes %}
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <a href="{{ path('recette_show', { 'id': recette.id }) }}">
+                            <div class="card h-100 p-3 carte">
+                                {% if recette.image %}
+                                    <img src="{{ asset('uploads/' ~ recette.image) }}" alt="Recette" class="card-img-top photo-card">
+                                {% else %}
+                                    <img src="{{ asset('images/image2.jpg') }}" alt="Recettte par défaut" class="card-img-top photo-card">
+                                {% endif %}
 
-							<h5 class="card-title my-2">{{ recette.titre }}</h5>
+                                <h5 class="card-title my-2">{{ recette.titre }}</h5>
 
-							<div class="temps-personne mt-2 mb-0">
-								<div class="d-flex mr-3">
-									<i class="fa-solid fa-utensils"></i>
-									<p class="p-1">{{ recette.nombrePersonne }}
-										{{ recette.nombrePersonne > 1 ? 'personnes' : 'personne' }}</p>
-								</div>
-								<div class="d-flex mr-3">
-									<i class="fa-regular fa-clock"></i>
-									<p class="p-1">{{ recette.tempsPreparation }}
-										min</p>
-								</div>
-							</div>
-							<div class="text-center mt-3">
-								<a href="{{ path('recette_show', { 'id': recette.id }) }}" class="btn">Voir détail</a>
-							</div>
+                                <div class="temps-personne mt-2 mb-0">
+                                    <div class="d-flex mr-3">
+                                        <i class="fa-solid fa-utensils"></i>
+                                        <p class="p-1">{{ recette.nombrePersonne }}
+                                            {{ recette.nombrePersonne > 1 ? 'personnes' : 'personne' }}</p>
+                                    </div>
+                                    <div class="d-flex mr-3">
+                                        <i class="fa-regular fa-clock"></i>
+                                        <p class="p-1">{{ recette.tempsPreparation }} min</p>
+                                    </div>
+                                </div>
 
-							{% if is_granted('ROLE_ADMIN') %}
-								<div class="mt-2">
-									<a href="{{ path('recette_edit', {'id': recette.id}) }}" class="btn btn-success btn-sm">Modifier</a>
-									<form action="{{ path('recette_delete', {id: recette.id}) }}" method="post" style="display: inline;">
-										<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ recette.id) }}">
-										<button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
-									</form>
-								</div>
-							{% endif %}
-
-							<div class="interaction mt-3">
-								<div class="d-flex">
-									<i class="fa-solid fa-comments"></i>
-									<p class="ms-2">15</p>
-								</div>
-								<div class="d-flex">
-									<i class="fa-solid fa-eye"></i>
-									<p class="ms-2">45</p>
-								</div>
-								<div class="d-flex">
-									<i class="fa-solid fa-heart"></i>
-									<p class="ms-2">110</p>
-								</div>
-							</div>
-							{# <p class="card-text mt-2">
-															<span class="badge bg-secondary">Catégorie :
-																{{ recette.categorie.nom }}</span>
-														</p> #}
-						</div>
-					</div>
-				{% else %}
-					<div class="col-12 text-center">
-						<p>Aucune recette disponible.</p>
-					</div>
-				{% endfor %}
-			</div>
-		</div>
-	</section>
+                                <div class="interaction mt-3">
+                                    <div class="d-flex">
+                                        <i class="fa-solid fa-comments"></i>
+                                        <p class="ms-2">{{ recette.commentaires|length }}</p>
+                                    </div>
+                                    <div class="d-flex">
+                                        <i class="fa-solid fa-eye"></i>
+                                        <p class="ms-2">45</p>
+                                    </div>
+                                    <div class="d-flex">
+                                        <i class="fa-solid fa-heart"></i>
+                                        <p class="ms-2">110</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="col-12 text-center">
+                        <p>Aucune recette disponible.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
 {% endblock %}

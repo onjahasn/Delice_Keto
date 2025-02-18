@@ -51,7 +51,7 @@ class UserController extends AbstractController // Déclaration de la classe Use
             $em->persist($user); // Prépare l'entité $user à être sauvegardée dans la base de données
             $em->flush(); // Sauvegarde réellement les données dans la base de données
 
-            return $this->redirectToRoute('app_home'); // Redirige l'utilisateur vers la page de la liste des utilisateurs après l'ajout
+            return $this->redirectToRoute('app_login'); // Redirige l'utilisateur vers la page de connexion
         }
 
         return $this->render('user/new.html.twig'); // Si la méthode est GET (formulaire de création), on affiche le formulaire
