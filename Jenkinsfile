@@ -57,6 +57,12 @@ pipeline {
             }
         }
 
+        stage('Compile Assets') {
+            steps {
+                sh 'php bin/console asset-map:compile'
+            }
+        }
+
         stage('Nettoyage du cache') {
             steps {
                 dir("${DEPLOY_DIR}") {
