@@ -59,8 +59,13 @@ pipeline {
         stage('Migration de la base de données') {
             steps {
                 dir("${DEPLOY_DIR}") {
-                    sh 'php bin/console doctrine:database:create --if-not-exists --env=prod'
-                    sh 'php bin/console doctrine:migrations:migrate --no-interaction --env=prod'
+                    script {
+                        // Création de la base si elle n'existe pas
+                        sh 'php bin/console doctrine:database:create --if-not-exists --env=prod'
+                        
+                        // Exécution des migrations
+                        sh 'php bin/console doctrine:migrations:migrate --no-interaction --env=prod'
+                    }
                 }
             }
         }
