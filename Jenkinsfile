@@ -68,7 +68,7 @@ pipeline {
         stage('Nettoyage du cache') {
             steps {
                 dir("${DEPLOY_DIR}") {
-                    sh 'php bin/console cache:clear --env=prod'
+                    sh 'php bin/console cache:clear'
                     sh 'php bin/console cache:warmup'
                 }
             }
