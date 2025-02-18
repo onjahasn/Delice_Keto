@@ -23,7 +23,6 @@ pipeline {
         }
 
         // Étape 2 : Installer les dépendances PHP
-        // Utilisation de Composer pour optimiser l'autoloader
         stage('Installation des dépendances') {
             steps {
                 dir("${DEPLOY_DIR}") {
@@ -80,7 +79,7 @@ pipeline {
         stage('Déployer le projet') {
             steps {
                 sh '''
-                    sudo rsync -avz --delete --omit-dir-times --no-perms . /var/www/deliceketo/
+                    sudo rsync -avz --delete --omit-dir-times --no-perms --exclude 'public/uploads/' . /var/www/deliceketo/
                     sudo chown -R www-data:www-data /var/www/deliceketo/
                     sudo chmod -R 775 /var/www/deliceketo/
                     sudo systemctl restart apache2
