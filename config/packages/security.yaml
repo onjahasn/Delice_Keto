@@ -67,7 +67,4 @@ security:
     - { path: ^/recette/\d+/edit$, roles: ROLE_ADMIN }
     - { path: ^/recette/\d+/delete$, roles: ROLE_ADMIN }
 
-    # Routes accessibles par USER et ADMIN
-    - { path: ^/recette$, roles: PUBLIC_ACCESS }
-    - { path: ^/recette/\d+$, roles: PUBLIC_ACCESS }
 
