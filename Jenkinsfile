@@ -56,14 +56,17 @@ pipeline {
         }
 
         stage('Migration de la base de données') {
-            script {
-            def migration_status = sh(script: 'php bin/console doctrine:migrations:status --env=prod | grep "New migrations"', returnStatus: true)
-            if (migration_status == 0) {
-                sh 'php bin/console doctrine:migrations:migrate --no-interaction --env=prod'
-            } else {
-                echo 'Aucune nouvelle migration à appliquer.'
+            steps {
+                script {
+                    def migration_status = sh(script: 'php bin/console doctrine:migrations:status --env=prod | grep "New migrations" || true', returnStatus: true)
+                    if (migration_status == 0) {
+                        echo 'Nouvelles migrations détectées. Exécution...'
+                        sh 'php bin/console doctrine:migrations:migrate --no-interaction --env=prod'
+                    } else {
+                        echo 'Aucune nouvelle migration à appliquer.'
+                    }
+                }
             }
-        }
         }
 
         stage('Nettoyage et optimisation du cache') {
