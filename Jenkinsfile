@@ -67,20 +67,10 @@ pipeline {
 
         stage('Déployer le projet') {
             steps {
-                sh '''
-                    # Supprimer tout sauf public/uploads/
-                    find /var/www/deliceketo/ -mindepth 1 -not -path "/var/www/deliceketo/public/uploads" -not -path "/var/www/deliceketo/public/uploads/*" -exec rm -rf {} +
-
-                    # Copier les fichiers du projet dans le dossier cible
-                    cp -r ${DEPLOY_DIR}/* /var/www/deliceketo/
-
-                    # Réappliquer les permissions
-                    chown -R www-data:www-data /var/www/deliceketo/
-                    chmod -R 775 /var/www/deliceketo/
-
-                    # Redémarrer Apache
-                    systemctl restart apache2
-                '''
+                sh "rm -rf /var/www/html/${DEPLOY_DIR}" // Supprime le dossier de destination
+                sh "mkdir /var/www/html/${DEPLOY_DIR}" // Recréé le dossier de destination
+                sh "cp -rT ${DEPLOY_DIR} /var/www/html/${DEPLOY_DIR}"
+                sh "chmod -R 775 /var/www/html/${DEPLOY_DIR}/var"
             }
         }
     }
