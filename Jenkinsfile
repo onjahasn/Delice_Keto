@@ -79,7 +79,7 @@ pipeline {
                     chmod -R 775 /var/www/deliceketo/
 
                     # Redémarrer Apache
-                    sudo systemctl restart apache2
+                    systemctl restart apache2
                 '''
             }
         }
