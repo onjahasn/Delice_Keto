@@ -63,8 +63,8 @@ security:
     - { path: ^/users, roles: IS_AUTHENTICATED_FULLY } # L'accès à la page /users est restreint aux utilisateurs qui sont entièrement authentifiés
 
     # Routes accessibles uniquement par ADMIN
-    - { path: ^/recette/\d+/new$, roles: ROLE_ADMIN }
-    - { path: ^/recette/\d+/edit$, roles: ROLE_ADMIN }
-    - { path: ^/recette/\d+/delete$, roles: ROLE_ADMIN }
+    # - { path: ^/recette/\d+/new$, roles: ROLE_ADMIN }
+    # - { path: ^/recette/\d+/edit$, roles: ROLE_ADMIN }
+    # - { path: ^/recette/\d+/delete$, roles: ROLE_ADMIN }
 
 
