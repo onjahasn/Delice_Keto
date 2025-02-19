@@ -55,23 +55,34 @@ pipeline {
                 sh 'php bin/console asset-map:compile'
             }
         }
-
+        
         stage('Nettoyage du cache') {
             steps {
                 dir("${DEPLOY_DIR}") {
-                    sh 'php bin/console cache:clear --verbose'
-                    sh 'php bin/console cache:warmup --verbose'
+                    sh 'php bin/console cache:clear'
+                    sh 'php bin/console cache:warmup'
                 }
             }
         }
 
         stage('Déployer le projet') {
             steps {
-                sh "rm -rf /var/www/${DEPLOY_DIR}" // Supprime le dossier de destination
-                sh "mkdir /var/www/${DEPLOY_DIR}" // Recréé le dossier de destination
-                sh "cp -rT ${DEPLOY_DIR} /var/www/${DEPLOY_DIR}"
-                sh "chown -R www-data:www-data /var/www/deliceketo"
-                sh "chmod -R 775 /var/www/${DEPLOY_DIR}/var"
+                sh '''
+                    sudo rsync -avz --delete --omit-dir-times --no-perms --exclude 'public/uploads/' . /var/www/deliceketo/
+                    sudo chown -R www-data:www-data /var/www/deliceketo/
+                    sudo chmod -R 775 /var/www/deliceketo/
+                    sudo systemctl restart apache2
+                '''
+            }
+        }
+
+        // ✅ **NOUVELLE ÉTAPE : Nettoyage du cache après déploiement**
+        stage('Nettoyage du cache après déploiement') {
+            steps {
+                dir("/var/www/deliceketo/") {
+                    sh 'php bin/console cache:clear'
+                    sh 'php bin/console cache:warmup'
+                }
             }
         }
     }
