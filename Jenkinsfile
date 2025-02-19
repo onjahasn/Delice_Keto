@@ -12,8 +12,6 @@ pipeline {
         MAILER_DSN = credentials('mailer-url')
     }
 
-    // Étape 1 : Cloner le dépôt Git dans le répertoire défini
-    // Suppression de l'ancien répertoire pour éviter les conflits
     stages {
         stage('Cloner le dépôt') {
             steps {
@@ -22,7 +20,6 @@ pipeline {
             }
         }
 
-        // Étape 2 : Installer les dépendances PHP
         stage('Installation des dépendances') {
             steps {
                 dir("${DEPLOY_DIR}") {
@@ -31,8 +28,6 @@ pipeline {
             }
         }
 
-        // Étape 3 : Configuration de l'environnement
-        // Création du fichier .env.local avec les bonnes valeurs
         stage('Créer .env.local avec les bonnes valeurs') {
             steps {
                 sh '''
@@ -44,8 +39,6 @@ pipeline {
             }
         }
 
-        // Étape 4 : Migration de la base de données
-        // Création de la base si elle n'existe pas et application des migrations
         stage('Migration de la base de données') {
             steps {
                 dir("${DEPLOY_DIR}") {
@@ -57,21 +50,12 @@ pipeline {
             }
         }
 
-        // Étape 5 : Compilation des assets du projet
         stage('Compilation des assets') {
             steps {
                 sh 'php bin/console asset-map:compile'
             }
         }
 
-        stage('Temporisation 1') {
-            steps {
-                sh 'echo "Attente avant le cache clear..."'
-                sh 'sleep 10' // Attendre 10 secondes (ajuste selon le besoin)
-            }
-        }
-
-        // Étape 6 : Nettoyage et optimisation du cache Symfony
         stage('Nettoyage du cache') {
             steps {
                 dir("${DEPLOY_DIR}") {
@@ -81,21 +65,20 @@ pipeline {
             }
         }
 
-        stage('Temporisation 2') {
-            steps {
-                sh 'echo "Attente apres le cache clear..."'
-                sh 'sleep 10' // Attendre 10 secondes (ajuste selon le besoin)
-            }
-        }
-
-        // Étape 7 : Déploiement du projet
-        // Synchronisation des fichiers avec le serveur, configuration des permissions et redémarrage d'Apache
         stage('Déployer le projet') {
             steps {
                 sh '''
-                    sudo rsync -avz --delete --omit-dir-times --no-perms --exclude 'public/uploads/' . /var/www/deliceketo/
+                    # Suppression complète sauf public/uploads/
+                    sudo find /var/www/deliceketo/ -mindepth 1 -not -path "/var/www/deliceketo/public/uploads/*" -delete
+                    
+                    # Copie des fichiers du projet dans le dossier cible
+                    sudo cp -r ${DEPLOY_DIR}/* /var/www/deliceketo/
+
+                    # Configuration des permissions
                     sudo chown -R www-data:www-data /var/www/deliceketo/
                     sudo chmod -R 775 /var/www/deliceketo/
+
+                    # Redémarrage d'Apache
                     sudo systemctl restart apache2
                 '''
             }
