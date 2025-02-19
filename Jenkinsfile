@@ -68,17 +68,17 @@ pipeline {
         stage('Déployer le projet') {
             steps {
                 sh '''
-                    # Suppression complète sauf public/uploads/
-                    sudo find /var/www/deliceketo/ -mindepth 1 -not -path "/var/www/deliceketo/public/uploads/*" -delete
-                    
-                    # Copie des fichiers du projet dans le dossier cible
+                    # Supprimer tout sauf public/uploads/
+                    sudo find /var/www/deliceketo/ -mindepth 1 -not -path "/var/www/deliceketo/public/uploads" -not -path "/var/www/deliceketo/public/uploads/*" -exec rm -rf {} +
+
+                    # Copier les fichiers du projet dans le dossier cible
                     sudo cp -r ${DEPLOY_DIR}/* /var/www/deliceketo/
 
-                    # Configuration des permissions
+                    # Réappliquer les permissions
                     sudo chown -R www-data:www-data /var/www/deliceketo/
                     sudo chmod -R 775 /var/www/deliceketo/
 
-                    # Redémarrage d'Apache
+                    # Redémarrer Apache
                     sudo systemctl restart apache2
                 '''
             }
