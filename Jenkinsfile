@@ -64,13 +64,27 @@ pipeline {
             }
         }
 
+        stage('Temporisation 1') {
+            steps {
+                sh 'echo "Attente avant le cache clear..."'
+                sh 'sleep 10' // Attendre 10 secondes (ajuste selon le besoin)
+            }
+        }
+
         // Étape 6 : Nettoyage et optimisation du cache Symfony
         stage('Nettoyage du cache') {
             steps {
                 dir("${DEPLOY_DIR}") {
-                    sh 'sudo -su www-data php bin/console cache:clear'
-                    sh 'sudo -su www-data php bin/console cache:warmup'
+                    sh 'php bin/console cache:clear --verbose'
+                    sh 'php bin/console cache:warmup --verbose'
                 }
+            }
+        }
+
+        stage('Temporisation 2') {
+            steps {
+                sh 'echo "Attente apres le cache clear..."'
+                sh 'sleep 10' // Attendre 10 secondes (ajuste selon le besoin)
             }
         }
 
