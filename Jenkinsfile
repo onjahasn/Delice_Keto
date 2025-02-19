@@ -68,8 +68,8 @@ pipeline {
         stage('Nettoyage du cache') {
             steps {
                 dir("${DEPLOY_DIR}") {
-                    sh 'php bin/console cache:clear'
-                    sh 'php bin/console cache:warmup'
+                    sh 'sudo -su www-data php bin/console cache:clear'
+                    sh 'sudo -su www-data php bin/console cache:warmup'
                 }
             }
         }
