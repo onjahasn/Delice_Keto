@@ -110,13 +110,13 @@ class RecetteController extends AbstractController
     }
 
     #[Route('/recette/{id}/edit', name: 'recette_edit', requirements: ['id' => '\\d+'], methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADMIN')]
+    // #[IsGranted('ROLE_ADMIN')]
     public function edit(Recette $recette, Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
 
         // Vérifier si l'utilisateur est le propriétaire de la recette
-        if ($recette->getUser() !== $user) {
+        if ($recette->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à modifier cette recette.');
         }
         $form = $this->createForm(RecetteType::class, $recette);
@@ -136,7 +136,7 @@ class RecetteController extends AbstractController
     }
 
     #[Route('/recette/{id}/delete', name: 'recette_delete', requirements: ['id' => '\\d+'], methods: ['POST'])]
-    #[IsGranted('ROLE_ADMIN')]
+    // #[IsGranted('ROLE_ADMIN')]
     public function delete(Recette $recette, Request $request, EntityManagerInterface $em): Response
     {
         if ($this->isCsrfTokenValid('delete' . $recette->getId(), $request->request->get('_token'))) {
