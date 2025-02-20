@@ -56,22 +56,22 @@ pipeline {
             }
         }
         
-        stage('Nettoyage du cache') {
-            steps {
-                dir("${DEPLOY_DIR}") {
-                    sh 'php bin/console cache:clear'
-                    sh 'php bin/console cache:warmup'
-                }
-            }
-        }
+        // stage('Nettoyage du cache') {
+        //     steps {
+        //         dir("${DEPLOY_DIR}") {
+        //             sh 'php bin/console cache:clear'
+        //             sh 'php bin/console cache:warmup'
+        //         }
+        //     }
+        // }
 
         stage('Déployer le projet') {
             steps {
                 sh '''
                     sudo rsync -avz --delete --omit-dir-times --no-perms --exclude 'public/uploads/' . /var/www/deliceketo/
-                    sudo chown -R www-data:www-data /var/www/deliceketo/
-                    sudo chmod -R 775 /var/www/deliceketo/
-                    sudo systemctl restart apache2
+                    #sudo chown -R www-data:www-data /var/www/deliceketo/
+                    #sudo chmod -R 775 /var/www/deliceketo/
+                    #sudo systemctl restart apache2
                 '''
             }
         }
@@ -83,6 +83,16 @@ pipeline {
                     sh 'php bin/console cache:clear'
                     sh 'php bin/console cache:warmup'
                 }
+            }
+        }
+
+        stage('Appliquer les permissions') {
+            steps {
+                sh '''
+                    sudo chown -R www-data:www-data /var/www/deliceketo/
+                    sudo chmod -R 775 /var/www/deliceketo/
+                    sudo systemctl restart apache2
+                '''
             }
         }
     }
