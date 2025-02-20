@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Informations légales
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div style="background-color: #E6F0FF; padding: 15px;">
+            <h3 style="color: #003399; text-align: center;">Informations légales</h3>
+        </div>
+
+        <p class="text-center">Le contenu du site (textes, images, logo, etc.) est protégé par le droit d’auteur.<br>
+            Toute reproduction, modification ou diffusion sans autorisation est interdite.</p>
+
+        <p class="text-center">Les informations collectées via le site sont utilisées uniquement pour
+            {{ data_usage }}.<br>
+            Conformément au RGPD, vous pouvez exercer vos droits d’accès, de modification ou de suppression<br>
+            en nous contactant à
+            <a href="mailto:{{ editor_email }}">{{ editor_email }}</a>.</p>
+
+        <p class="text-center">{{ editor_name }}
+            ne saurait être tenu responsable en cas de dysfonctionnement,<br>
+            d’indisponibilité ou d'erreurs sur le site.</p>
+
+        <p class="text-center">
+            <strong>Nom de l’hébergeur :</strong>
+            {{ host_name }}<br>
+            <strong>Adresse :</strong>
+            {{ host_address }}<br>
+            <strong>Téléphone :</strong>
+            {{ host_phone }}</p>
+
+        <p class="text-center">
+            <strong>Nom du site :</strong>
+            {{ site_name }}<br>
+            <strong>URL du site :</strong>
+            <a href="{{ site_url }}">{{ site_url }}</a><br>
+            <strong>Éditeur responsable :</strong>
+            {{ editor_name }}</p>
+
+        <p class="text-center">
+            <strong>Adresse :</strong>
+            {{ editor_address }}<br>
+            <strong>Email :</strong>
+            <a href="mailto:{{ editor_email }}">{{ editor_email }}</a><br>
+            <strong>Téléphone :</strong>
+            {{ editor_phone }}</p>
+    </div>
+{% endblock %}
