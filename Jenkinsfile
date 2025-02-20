@@ -76,7 +76,7 @@ pipeline {
             }
         }
 
-        // ✅ **NOUVELLE ÉTAPE : Nettoyage du cache après déploiement**
+        // NOUVELLE ÉTAPE : Nettoyage du cache après déploiement
         stage('Nettoyage du cache après déploiement') {
             steps {
                 dir("/var/www/deliceketo/") {

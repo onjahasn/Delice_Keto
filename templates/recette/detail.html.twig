@@ -96,7 +96,7 @@
 					<tbody>
 						{% for commentaire in recette.commentaires %}
 							<tr>
-								<td>{{ commentaire.user.username|default('Anonyme') }}</td>
+								<td>{{ commentaire.user.name|default('Anonyme') }}</td>
 								<td>{{ commentaire.description }}</td>
 								<td>{{ commentaire.createdAt|date('Y-m-d H:i') }}</td>
 								<td>

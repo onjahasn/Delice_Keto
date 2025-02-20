@@ -32,7 +32,7 @@ class UserController extends AbstractController // Déclaration de la classe Use
             $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{8,}$/'; // Définition du pattern pour le mot de passe
 
             if (!preg_match($pattern, $password)) { // Vérifie si le mot de passe respecte le pattern
-                $this->addFlash('error', 'Le mot de passe doit contenir au moins 12 caractères et inclure des minuscules, majuscules, chiffres et caractères spéciaux.');
+                $this->addFlash('error', 'Le mot de passe doit contenir au moins 8 caractères et inclure des minuscules, majuscules, chiffres et caractères spéciaux.');
                 return $this->redirectToRoute('user_new'); // Redirige vers le formulaire de création en cas d'erreur
             }
 

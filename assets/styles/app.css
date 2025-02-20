@@ -106,6 +106,10 @@ textarea::placeholder,
 .carte {
     -webkit-box-shadow: -7px 8px 38px -8px rgba(0, 0, 0, 0.8);
     box-shadow: -7px 8px 38px -8px rgba(0, 0, 0, 0.8);
+    transition: transform 0.3s ease-in-out;
+}
+.carte:hover {
+    transform: scale(1.05);
 }
 
 .interaction {
