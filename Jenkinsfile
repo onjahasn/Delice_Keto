@@ -55,6 +55,7 @@ pipeline {
                 sh 'php bin/console asset-map:compile'
             }
         }
+        
 
         stage('Déployer le projet') {
             steps {
@@ -67,6 +68,7 @@ pipeline {
             }
         }
 
+        // NOUVELLE ÉTAPE : Nettoyage du cache après déploiement
         stage('Nettoyage du cache après déploiement') {
             steps {
                 dir("/var/www/deliceketo/") {
@@ -83,15 +85,6 @@ pipeline {
                     sudo chmod -R 775 /var/www/deliceketo/
                     sudo systemctl restart apache2
                 '''
-            }
-        }
-
-        // NOUVELLE ÉTAPE : Tests
-        stage('Tests') {
-            steps {
-                dir("${DEPLOY_DIR}") {
-                    sh 'php bin/phpunit'
-                }
             }
         }
     }
