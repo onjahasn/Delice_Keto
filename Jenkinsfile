@@ -55,7 +55,6 @@ pipeline {
                 sh 'php bin/console asset-map:compile'
             }
         }
-        
 
         stage('Déployer le projet') {
             steps {
