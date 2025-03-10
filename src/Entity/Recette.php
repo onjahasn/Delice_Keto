@@ -47,7 +47,7 @@ class Recette
     #[ORM\ManyToOne(inversedBy: 'recettes')]
     private ?User $user = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(name: "nombre_vues", type: "integer", nullable: true)]
     private ?int $nombreVues = null;
 
     #[ORM\Column(nullable: true)]

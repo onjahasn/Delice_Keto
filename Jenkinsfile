@@ -55,6 +55,7 @@ pipeline {
                 sh 'php bin/console asset-map:compile'
             }
         }
+        
 
         stage('Déployer le projet') {
             steps {
@@ -67,7 +68,6 @@ pipeline {
             }
         }
 
-        // NOUVELLE ÉTAPE : Nettoyage du cache après déploiement
         stage('Nettoyage du cache après déploiement') {
             steps {
                 dir("/var/www/deliceketo/") {

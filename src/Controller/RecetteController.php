@@ -6,6 +6,7 @@ use App\Entity\Commentaire;
 use App\Entity\Recette;
 use App\Form\RecetteType;
 use App\Repository\RecetteRepository;
+use App\Service\MongoDBService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,9 +19,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class RecetteController extends AbstractController
 {
     #[Route('/recette', name: 'recette_index')]
-    public function index(RecetteRepository $recetteRepository): Response
+    public function index(RecetteRepository $recetteRepository, MongoDBService $mongoDbService): Response
     {
         $recettes = $recetteRepository->findAll();
+        $mongoDbService->insertVisit('recette');
 
         return $this->render('recette/index.html.twig', [
             'recettes' => $recettes,

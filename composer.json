@@ -17,7 +17,6 @@
         "nelmio/cors-bundle": "^2.5",
         "phpdocumentor/reflection-docblock": "^5.6",
         "phpstan/phpdoc-parser": "^2.0",
-        "phpunit/phpunit": "*",
         "symfony/apache-pack": "^1.0",
         "symfony/asset": "7.2.*",
         "symfony/asset-mapper": "7.2.*",
@@ -107,6 +106,7 @@
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^4.0",
         "fakerphp/faker": "^1.24",
+        "phpunit/phpunit": "^9.6",
         "symfony/browser-kit": "7.2.*",
         "symfony/css-selector": "7.2.*",
         "symfony/debug-bundle": "7.2.*",
