@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        GIT_REPO = 'https://github.com/onjahasn/user_CDA.git'
+        GIT_REPO = 'https://github.com/onjahasn/Delice_Keto.git'
         GIT_BRANCH = 'main'
         DEPLOY_DIR = 'deliceketo'
 
