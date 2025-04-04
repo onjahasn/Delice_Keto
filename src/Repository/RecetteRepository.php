@@ -28,10 +28,10 @@ class RecetteRepository extends ServiceEntityRepository
     }
 
     public function countAllRecettes(): int
-    {
-        return $this->createQueryBuilder('r')
-            ->select('COUNT(r.id)')
-            ->getQuery()
+    {        
+        return $this->createQueryBuilder('r')                 // Crée un QueryBuilder pour l'entité 'r' (Recette)           
+            ->select('COUNT(r.id)')                           // Sélectionne le nombre total de recettes (COUNT(r.id))
+            ->getQuery()                                      // Exécute la requête et retourne le résultat sous forme de valeur d'un entier
             ->getSingleScalarResult();
     }
 

@@ -21,7 +21,7 @@ class Commentaire
     private ?string $description = null;
 
     #[Groups(['comment:read'])]
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'commentaire')]

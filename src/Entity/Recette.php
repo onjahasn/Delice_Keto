@@ -22,7 +22,7 @@ class Recette
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'recettes')]
@@ -58,6 +58,7 @@ class Recette
         $this->etapes = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
         $this->ingredients = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int
