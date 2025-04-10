@@ -53,6 +53,9 @@ class Recette
     #[ORM\Column(nullable: true)]
     private ?int $nombreLikes = null;
 
+    #[ORM\Column]
+    private ?bool $isValidatedAt = false;
+
     public function __construct()
     {
         $this->etapes = new ArrayCollection();
@@ -253,6 +256,18 @@ class Recette
     public function setNombreLikes(?int $nombreLikes): static
     {
         $this->nombreLikes = $nombreLikes;
+
+        return $this;
+    }
+
+    public function isValidatedAt(): ?bool
+    {
+        return $this->isValidatedAt;
+    }
+
+    public function setValidatedAt(bool $isValidatedAt): static
+    {
+        $this->isValidatedAt = $isValidatedAt;
 
         return $this;
     }

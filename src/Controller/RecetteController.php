@@ -21,7 +21,8 @@ class RecetteController extends AbstractController
     #[Route('/recette', name: 'recette_index')]
     public function index(RecetteRepository $recetteRepository, MongoDBService $mongoDbService): Response
     {
-        $recettes = $recetteRepository->findAll();
+        // $recettes = $recetteRepository->findAll();
+        $recettes = $recetteRepository->findBy(['isValidatedAt' => true]); // Afficher uniquement les recettes validées
         $mongoDbService->insertVisit('recette');
 
         return $this->render('recette/index.html.twig', [
@@ -78,9 +79,10 @@ class RecetteController extends AbstractController
         ]);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Associer la recette à l'utilisateur connecté
-            $recette->setUser($this->getUser());
+        if ($form->isSubmitted() && $form->isValid()) {           
+            $recette->setUser($this->getUser());  // Associer la recette à l'utilisateur connecté
+            $recette->setValidatedAt(false); // La recette est non validée par défaut
+
             // Gestion de l'image
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {

@@ -13,9 +13,17 @@
 						<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ recette.id) }}">
 						<button type="submit" class="btn text-dark m-1">Supprimer</button>
 					</form>
+
 					<a href="{{ path('recette_edit', { id: recette.id }) }}" class="btn text-dark m-1">Modifier</a>
 				{% endif %}
 				<a href="{{ path('recette_index') }}" class="btn text-dark m-1">Retour</a>
+
+				{% if not recette.isValidatedAt and is_granted('ROLE_ADMIN') %}
+					<form action="{{ path('recette_validee', { id: recette.id }) }}" method="post" style="display: inline;">
+						<input type="hidden" name="_token" value="{{ csrf_token('valider' ~ recette.id) }}">
+						<button type="submit" class="btn text-dark m-1">Valider</button>
+					</form>
+				{% endif %}
 			</div>
 		</div>
 
