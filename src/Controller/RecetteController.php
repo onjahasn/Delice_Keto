@@ -15,18 +15,31 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Knp\Component\Pager\PaginatorInterface;
 
 class RecetteController extends AbstractController
 {
-    #[Route('/recette', name: 'recette_index')]
-    public function index(RecetteRepository $recetteRepository, MongoDBService $mongoDbService): Response
+    #[Route('/recette', name: 'recette_index', methods: ['GET'])]
+    public function index(RecetteRepository $recetteRepository, MongoDBService $mongoDbService, PaginatorInterface $paginator, Request $request): Response
     {
-        // $recettes = $recetteRepository->findAll();
-        $recettes = $recetteRepository->findBy(['isValidatedAt' => true]); // Afficher uniquement les recettes validées
-        $mongoDbService->insertVisit('recette');
+        $page = $request->query->getInt('page', 1); // Récupère le numéro de page depuis la requête
+        $limit = 8; // Nombre de recettes par page
+
+        $queryBuilder = $recetteRepository->createQueryBuilder('r')  // Crée un QueryBuilder pour récupérer les recettes validées            
+            ->where('r.isValidatedAt = :validated') // Ajoute une condition pour ne récupérer que les recettes validées
+            ->setParameter('validated', true)  // Définit la valeur du paramètre "validated" à true           
+            ->orderBy('r.createdAt', 'DESC');  // Trie les recettes par date de création dans l'ordre décroissant
+
+        $pagination = $paginator->paginate(  // Utilise le paginator pour paginer les résultats de la requête
+            $queryBuilder->getQuery(),  // Exécute la requête générée par le QueryBuilder           
+            $page,                       // Définit le numéro de la page actuelle           
+            $limit                       // Définit le nombre de recettes par page
+        );
+
+        #$mongoDbService->insertVisit('recette');
 
         return $this->render('recette/index.html.twig', [
-            'recettes' => $recettes,
+            'pagination' => $pagination,
         ]);
     }
 
@@ -79,14 +92,14 @@ class RecetteController extends AbstractController
         ]);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {           
+        if ($form->isSubmitted() && $form->isValid()) {
             $recette->setUser($this->getUser());  // Associer la recette à l'utilisateur connecté
             $recette->setValidatedAt(false); // La recette est non validée par défaut
 
             // Gestion de l'image
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
-                $newFilename = uniqid() . '.' . $imageFile->guessExtension();                
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
                 $imageFile->move($uploadDir, $newFilename);  // Déplacer le fichier vers le répertoire d'upload                
                 $recette->setImage($newFilename);  // Enregistrer le chemin ou le nom du fichier dans l'entité
             }
@@ -96,7 +109,7 @@ class RecetteController extends AbstractController
             }
             // Associez l'étape à la recette
             foreach ($recette->getEtapes() as $index => $etape) {
-                $etape->setRecette($recette); 
+                $etape->setRecette($recette);
                 $etape->setNumEtape($index + 1); // Définit un numéro d'étape unique
             }
 
@@ -194,7 +207,7 @@ class RecetteController extends AbstractController
             'dernieresRecettes' => $dernieresRecettes,
         ]);
     }
-    
+
     #[Route('/recette/{id}/comments-count', name: 'comments_count', methods: ['GET'])]
     public function getCommentsCount(Recette $recette): JsonResponse
     {

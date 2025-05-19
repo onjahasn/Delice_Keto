@@ -4,24 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Recettes non validées</h1>
-
-	{# <div class="card-deck">
-		{% for recette in recettes %}
-			<div class="card" style="width: 18rem; margin: 1rem;">
-				<div class="card-body">
-					<h5 class="card-title">{{ recette.titre }}</h5>
-					<p class="card-text">{{ recette.description }}</p>
-					<form method="post" action="{{ path('recette_validee', {id: recette.id}) }}">
-						<button type="submit" class="btn btn-success">Valider</button>
-					</form>
-				</div>
-			</div>
-		{% else %}
-			<p>Aucune recette non validée pour le moment.</p>
-		{% endfor %}
-	</div> #}
-
+	<h2 class="text-center">Recettes non validées</h2>
 	<section class="mt-3">
 		<div class="container recette">
 			<div class="row pb-3">
@@ -60,16 +43,17 @@
 									<p>110</p>
 								</div>
 							</div>
-							<div class="card-body">
+							<div class="card-body d-flex justify-content-center">
 								<form method="post" action="{{ path('recette_validee', {id: recette.id}) }}">
-									<button type="submit" class="btn btn-success">Valider</button>
+									<button type="submit" class="btn text-dark m-1">Valider</button>
 								</form>
-								{# <form method="post" action="{{ path('recette_supprimee', {id: recette.id}) }}">
-									<button type="submit" class="btn btn-danger">Supprimer</button>
-								</form> #}
 								<a href="{{ path('recette_show', { 'id': recette.id }) }}">
-									<button type="button" class="btn btn-primary">Voir</button>
+									<button type="button" class="btn text-dark m-1">Voir</button>
 								</a>
+								<form action="{{ path('recette_delete', { id: recette.id }) }}" method="post" style="display: inline;">
+									<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ recette.id) }}">
+									<button type="submit" class="btn text-dark m-1">Supprimer</button>
+								</form>
 							</div>
 						</div>
 

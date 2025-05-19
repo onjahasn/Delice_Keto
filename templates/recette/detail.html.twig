@@ -84,9 +84,15 @@
 				</ul>
 			</div>
 		</div>
-
 		<hr>
-
+		{# Formulaire pour ajouter un commentaire #}
+		<form method="post" action="{{ path('recette_show', { id: recette.id }) }}" class="card p-3 shadow-sm">
+			<div class="mb-3">
+				<label for="description" class="form-label fw-bold">Votre commentaire :</label>
+				<textarea id="description" name="description" class="form-control" rows="3" required></textarea>
+			</div>
+			<button type="submit" class="btn btn-primary">Envoyer</button>
+		</form>
 		{# Section des commentaires #}
 		<div class="mt-4">
 			{% if recette.commentaires is empty %}
@@ -103,7 +109,7 @@
 					</thead>
 					<tbody>
 						{% for commentaire in recette.commentaires %}
-							<tr>
+							<tr class="comment-row {% if loop.index > 3 %}d-none{% endif %}">
 								<td>{{ commentaire.user.name|default('Anonyme') }}</td>
 								<td>{{ commentaire.description }}</td>
 								<td>{{ commentaire.createdAt|date('Y-m-d H:i') }}</td>
@@ -127,17 +133,12 @@
 						{% endfor %}
 					</tbody>
 				</table>
-			{% endif %}
-
-
-			{# Formulaire pour ajouter un commentaire #}
-			<form method="post" action="{{ path('recette_show', { id: recette.id }) }}" class="card p-3 shadow-sm">
-				<div class="mb-3">
-					<label for="description" class="form-label fw-bold">Votre commentaire :</label>
-					<textarea id="description" name="description" class="form-control" rows="3" required></textarea>
+				<div class="text-center">
+					<button id="show-more-comments" class="btn btn-secondary mt-2">Voir plus</button>
+					<button id="show-less-comments" class="btn btn-secondary mt-2 d-none">Voir moins</button>
 				</div>
-				<button type="submit" class="btn btn-primary">Envoyer</button>
-			</form>
+
+			{% endif %}
 		</div>
 	</section>
 {% endblock %}

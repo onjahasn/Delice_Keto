@@ -7,7 +7,7 @@
 	<section class="mt-3">
 		<div class="container recette">
 			<div class="row pb-3">
-				{% for recette in recettes %}
+				{% for recette in pagination %}
 					<div class="col-md-6 col-lg-3 mb-3">
 						<a href="{{ path('recette_show', { 'id': recette.id }) }}">
 							<div class="card h-100 p-3 carte">
@@ -49,6 +49,8 @@
 				{% endfor %}
 			</div>
 		</div>
+		<div class="pagination justify-content-center">
+			{{ knp_pagination_render(pagination) }}
+		</div>
 	</section>
-
 {% endblock %}

@@ -150,8 +150,8 @@ textarea::placeholder,
     padding: 20px;
     margin: 0 auto;
     margin-top: 20px;
-    /* width: 430px;
-    height: 460px; */
+    -webkit-box-shadow: -7px 8px 38px -8px rgba(0, 0, 0, 0.8);
+    box-shadow: -7px 8px 38px -8px rgba(0, 0, 0, 0.8);
     font-family: Arial, sans-serif;
 }
 
@@ -204,6 +204,7 @@ a {
     .carousel-item img {
         height: 300px;
     }
+
     .navbar-collapse {
         display: flex;
         flex-direction: column;

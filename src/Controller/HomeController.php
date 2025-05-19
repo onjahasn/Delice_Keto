@@ -26,7 +26,7 @@ class HomeController extends AbstractController
         $carousel = $this->em->getRepository(Recette::class)->findAll();
         $totalRecettes = $this->em->getRepository(Recette::class)->count([]);
         $recettes = $recetteRepository->findBy([], ['createdAt' => 'DESC'], 5);
-        $mongoDbService->insertVisit('home'); // Mise à jour des statistiques MongoDB
+        #$mongoDbService->insertVisit('home'); // Mise à jour des statistiques MongoDB
 
         return $this->render('home/index.html.twig', [
             'carousel' => $carousel,
@@ -35,4 +35,3 @@ class HomeController extends AbstractController
         ]);
     }
 }
-
