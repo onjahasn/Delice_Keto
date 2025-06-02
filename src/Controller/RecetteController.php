@@ -140,8 +140,9 @@ class RecetteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            $entityManager->persist($recette);
             $entityManager->flush();
+            $this->addFlash('success', 'Recette mise à jour avec succès.');
 
             return $this->redirectToRoute('recette_index');
         }

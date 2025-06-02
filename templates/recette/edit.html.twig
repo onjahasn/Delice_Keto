@@ -4,9 +4,8 @@
 {% endblock %}
 
 {% block body %}
-	<div class="formulaire-ajout-recette carte mb-4">
+	<div class="formulaire-connexion mb-4">
 		<h2 class="text-center mt-2">Ajouter une recette</h2>
-
 		<div class="my-4">
 			{{ form_start(form, {'method': 'POST', 'action': path('recette_edit', { 'id': recette.id })}) }}
 			{{ form_row(form.titre) }}
@@ -37,13 +36,11 @@
 			<button type="button" id="add-etape" class="btn my-2">Ajouter une étape</button>
 			<br/>
 			{# {{ form_row(form.createdAt) }} #}
-<button type="submit" class="btn text-dark mt-3">Modifier</button>
-
-<a href="{{ path('recette_index') }}" class="btn text-dark mt-3">Retour</a>
+			<button type="submit" class="btn mt-3">Enregistrer les modifications</button>
+			<a href="{{ path('recette_index') }}" class="btn mt-3">Retour</a>
 
 			{{ form_end(form) }}
 		</div>
 	</div>
 
 {% endblock %}
-
