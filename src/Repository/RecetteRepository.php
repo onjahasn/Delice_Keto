@@ -19,16 +19,18 @@ class RecetteRepository extends ServiceEntityRepository
     public function findByCategory($categoryId): array
     {
         return $this->createQueryBuilder('a')
-            ->join('a.categorie', 'c') // Utilisez 'a.categorie' (nom exact de la relation dans Recette)
-            ->where('c.id = :categoryId') // Filtrer par ID de la catégorie
+            ->join('a.categorie', 'c')
+            ->where('c.id = :categoryId')
+            ->andWhere('a.isValidatedAt = :validated')
             ->setParameter('categoryId', $categoryId)
-            ->orderBy('a.titre', 'ASC') // Trier par titre (facultatif)
+            ->setParameter('validated', true)
+            ->orderBy('a.titre', 'ASC')
             ->getQuery()
             ->getResult();
     }
 
     public function countAllRecettes(): int
-    {        
+    {
         return $this->createQueryBuilder('r')                 // Crée un QueryBuilder pour l'entité 'r' (Recette)           
             ->select('COUNT(r.id)')                           // Sélectionne le nombre total de recettes (COUNT(r.id))
             ->getQuery()                                      // Exécute la requête et retourne le résultat sous forme de valeur d'un entier
@@ -40,16 +42,18 @@ class RecetteRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('r');
 
         return $qb
-            ->leftJoin('r.categorie', 'c')   // Jointure avec la catégorie
-            ->leftJoin('r.etapes', 'e')      // Jointure avec les étapes
-            ->where(
+            ->leftJoin('r.categorie', 'c')
+            ->leftJoin('r.etapes', 'e')
+            ->where('r.isValidatedAt = :validated') // Ajout du filtre pour les recettes validées
+            ->andWhere(
                 $qb->expr()->orX(
-                    $qb->expr()->like('LOWER(c.nom)', 'LOWER(:query)'),         // Catégorie
-                    $qb->expr()->like('LOWER(e.description)', 'LOWER(:query)') // Étape
+                    $qb->expr()->like('LOWER(c.nom)', 'LOWER(:query)'),
+                    $qb->expr()->like('LOWER(e.description)', 'LOWER(:query)')
                 )
             )
-            ->setParameter('query', '%' . $query . '%') // Recherche partielle
-            ->orderBy('r.createdAt', 'DESC')           // Trie par date de création (optionnel)
+            ->setParameter('validated', true)
+            ->setParameter('query', '%' . $query . '%')
+            ->orderBy('r.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
     }

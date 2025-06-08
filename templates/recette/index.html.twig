@@ -8,7 +8,7 @@
 		<div class="container recette">
 			<div class="row pb-3">
 				{% for recette in pagination %}
-					<div class="col-md-6 col-lg-3 mb-3">
+					<div class="col-6 col-md-4 col-lg-3 mb-3">
 						<a href="{{ path('recette_show', { 'id': recette.id }) }}">
 							<div class="card h-100 p-3 carte">
 								{% if recette.image %}
@@ -16,8 +16,8 @@
 								{% else %}
 									<img src="{{ asset('images/image2.webp') }}" alt="Recette" class="card-img-top photo-card">
 								{% endif %}
-								<h5 class="card-title my-2">{{ recette.titre }}</h5>
-								<div class="temps-personne mt-2 mb-0">
+								<h5 class="card-title my-2 text-center">{{ recette.titre }}</h5>
+								{# <div class="temps-personne mt-2 mb-0">
 									<div class="d-flex mr-3">
 										<i class="fa-solid fa-utensils"></i>
 										<p class="p-1">{{ recette.nombrePersonne }}
@@ -28,7 +28,7 @@
 										<p class="p-1">{{ recette.tempsPreparation }}
 											min</p>
 									</div>
-								</div>
+								</div> #}
 								<div class="interaction">
 									<div class="d-flex">
 										<i class="fa-solid fa-comments"></i>

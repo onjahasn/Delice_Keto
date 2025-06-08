@@ -166,15 +166,22 @@ class RecetteController extends AbstractController
     }
 
     #[Route('/recettes/search', name: 'recette_search', methods: ['GET'])]
-    public function search(Request $request, RecetteRepository $recetteRepository): Response
+    public function search(Request $request, RecetteRepository $recetteRepository, PaginatorInterface $paginator): Response
     {
-        $query = $request->query->get('q', ''); // Récupère le terme de recherche
+        $query = $request->query->get('q', '');
+        $page = $request->query->getInt('page', 1);
+        $limit = 8;
 
-        // Recherche uniquement par catégorie et étape
-        $recettes = $recetteRepository->searchByCategoryAndStep($query);
+        $results = $recetteRepository->searchByCategoryAndStep($query);
+
+        $pagination = $paginator->paginate(
+            $results,
+            $page,
+            $limit
+        );
 
         return $this->render('recette/index.html.twig', [
-            'recettes' => $recettes,
+            'pagination' => $pagination,
             'query' => $query,
         ]);
     }
@@ -201,7 +208,11 @@ class RecetteController extends AbstractController
     public function dernieresRecettes(RecetteRepository $recetteRepository): Response
     {
         // Récupérer les 5 dernières recettes
-        $dernieresRecettes = $recetteRepository->findBy([], ['createdAt' => 'DESC'], 4);
+        $dernieresRecettes = $recetteRepository->findBy(
+            ['isValidatedAt' => true],
+            ['createdAt' => 'DESC'],
+            4
+        );
 
         // Retourner la vue Twig
         return $this->render('recette/dernieres_recettes.html.twig', [

@@ -56,22 +56,6 @@
 						{{ recette.categorie.nom }}</p>
 				</div>
 			</div>
-
-			{# Colonne des étapes #}
-			<div class="col-md-4 special">
-				<h6 class="text-center fw-bolder">RECETTE</h6>
-				{% for etape in recette.etapes %}
-					<p>
-						<span>ÉTAPE
-							{{ loop.index }}
-							:</span>
-						{{ etape.description }}
-					</p>
-				{% else %}
-					<p>Aucune étape définie pour cette recette.</p>
-				{% endfor %}
-			</div>
-
 			{# Colonne des ingrédients #}
 			<div class="col-md-4">
 				<h6 class="text-center fw-bolder">LISTE DES INGRÉDIENTS</h6>
@@ -82,6 +66,21 @@
 						<li>Aucun ingrédient défini pour cette recette.</li>
 					{% endfor %}
 				</ul>
+			</div>
+
+			{# Colonne des étapes #}
+			<div class="col-md-4 special">
+				<h6 class="text-center fw-bolder">PRÉPARATION</h6>
+				{% for etape in recette.etapes %}
+					<p>
+						<span>ÉTAPE
+							{{ loop.index }}
+							:</span>
+						{{ etape.description }}
+					</p>
+				{% else %}
+					<p>Aucune étape définie pour cette recette.</p>
+				{% endfor %}
 			</div>
 		</div>
 		<hr>

@@ -193,6 +193,10 @@ a {
     transition: color 0.3s ease;
 }
 
+.mobile-fixed-top {
+    position: static;
+}
+
 @media (max-width: 576px) {
     .carousel-item img {
         height: 200px;
@@ -245,5 +249,21 @@ a {
 
     .delice {
         display: none;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .mobile-fixed-top {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1030;
+        width: 100%;
+    }
+
+    body {
+        padding-top: 70px;
+        /* ajuste selon la hauteur de ta navbar */
     }
 }
